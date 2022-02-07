@@ -23,8 +23,22 @@ const app = Vue.createApp({
                 charSelection: "Choose a Slot",
                 selected: null,
             },
+            identity: {
+                activated: false,
+                firstName: "",
+                lastName: "",
+                sex: "",
+                dob: ""
+            }
         };
     },
+  computed: {
+    identityState() {
+        const i = this.identity
+        if (!i.firstName || !i.lastName || !i.sex || !i.dob) return 'Missing Information'
+        return 'Create identity'
+    }
+  },
     methods: {
         messageHandler(e) {
             switch (e.data.action) {
@@ -69,37 +83,40 @@ const app = Vue.createApp({
                     }
                 }
                 this.multicharacter.activated = true;
-            break;
-            case "endMulticharacter":
-                this.multicharacter.activated = false;
-                this.multicharacter.chars.length = 0;
-            break;
-        }
+                break;
+                case "endMulticharacter":
+                    this.multicharacter.activated = false;
+                    this.multicharacter.chars.length = 0;
+                break;
+            }
+        },
+        checkIdentity() {
+            console.log(this.identity);
         },
         checkCharacter() {
-        if (this.multicharacter.data === "create") {
-            fetchNui("create_character").then((resp) => {
-                if (resp.done) {
-                    this.clearData();
-                } else {
-                    console.log(
-                    "Error: Could not create character. Data was not received"
-                    );
-                }
-            });
-        } else if (this.multicharacter.data !== null) {
-            fetchNui("select_character", {
-                character_id: this.multicharacter.data,
-            }).then((resp) => {
-                if (resp.done) {
-                    this.clearData();
-                } else {
-                    console.log(
-                    "Error: Could not select character. Data was not received"
-                    );
-                }
-            });
-        }
+            if (this.multicharacter.data === "create") {
+                fetchNui("create_character").then((resp) => {
+                    if (resp.done) {
+                        this.clearData();
+                    } else {
+                        console.log(
+                        "Error: Could not create character. Data was not received"
+                        );
+                    }
+                });
+            } else if (this.multicharacter.data !== null) {
+                fetchNui("select_character", {
+                    character_id: this.multicharacter.data,
+                }).then((resp) => {
+                    if (resp.done) {
+                        this.clearData();
+                    } else {
+                        console.log(
+                        "Error: Could not select character. Data was not received"
+                        );
+                    }
+                });
+            }
         },
         deleteSelected(data) {
             fetchNui("delete_character", { character_id: data }).then((resp) => {
@@ -229,6 +246,18 @@ app.component('info-box', {
 		</div>
 	`,
 	props: ['data1', 'data2', 'data3', 'data4', 'name1', 'name2', 'name3', 'name4', 'svg_path']
+})
+
+app.component('custom-input', {
+	template: `
+	      <div class="w-5/6 flex flex-col items-center">
+                <span class="self-start mb-2 text-gray-300 font-spline-sans font-semibold">{{ title }}:</span>
+                <label class="w-full">
+                  <input :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="w-full h-8 rounded outline-none px-4 py-2 border-2 border-gray-300 shadow-sm">
+                </label>
+          </div>
+	`,
+	props: ['title', 'modelValue']
 })
 
 app.mount('#app')

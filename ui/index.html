@@ -16,8 +16,7 @@
         <transition name="slide-fade">
             <div
             v-if="multicharacter.activated"
-            style="background: #131C26;"
-            class="w-full h-full grid grid-col-3 gap-6 grid-cols-4 grid-rows-6"
+            class="w-full h-full grid grid-col-3 gap-6 grid-cols-4 grid-rows-6 bg-atl-bg"
           >
             <div
               class="flex flex-col items-start justify-center px-1 rounded col-span-4 font-spline-sans font-bold ml-16 mr-16 border-b-2 border-white text-shadow-black"
@@ -53,9 +52,73 @@
               </button>
             </div>
           </div>
+          <div
+              v-else-if="identity.activated"
+              class="w-full h-full grid place-items-center bg-atl-bg"
+          >
+            <div
+              class="bg-atl-sl w-96 h-226 rounded-lg flex flex-col items-center justify-evenly shadow-lg border-r-4 border-b-4 border-slate-600"
+            >
+              <div class="flex flex-col items-center border-b h-1/6 w-5/6">
+                <span class="font-spline-sans text-gray-100 font-bold text-6xl">Identity</span>
+                <span class="font-spline-sans text-gray-400 mt-1">Create your character identity.</span>
+              </div>
+                <custom-input title="First Name" v-model="identity.firstName"></custom-input>
+                <custom-input title="Last Name" v-model="identity.lastName"></custom-input>
+                <custom-input title="Date of Birth" v-model="identity.dob"></custom-input>
+              <div class="w-5/6 flex flex justify-evenly items-center">
+                <label>
+                  <span class="font-spline-sans text-shadow-black text-gray-200 font-medium mr-2">Male</span>
+                  <input v-model="identity.sex" name="sex" class="sex" type="radio" value="male">
+                </label>
+                <label>
+                  <span class="font-spline-sans text-shadow-black text-gray-200 font-medium mr-2">Female</span>
+                  <input v-model="identity.sex" name="sex" class="sex" type="radio" value="female">
+                </label>
+              </div>
+              <div class="flex flex-col items-center justify-evenly w-full">
+                <button
+                        @click="checkIdentity"
+                  class="w-5/6 bg-atl-3 text-gray-200 text-shadow-black py-2 rounded font-semibold font-spline-sans inline-flex items-center justify-center hover:bg-atl-4 duration-200 transform hover:scale-105 shadow-lg"
+                >
+                  {{ identityState }}
+                </button>
+                <button class="text-gray-400 font-medium transition duration-200 hover:underline hover:text-gray-200 mt-1">Go back</button>
+              </div>
+            </div>
+          </div>
         </transition>
     </div>
     <script src="https://unpkg.com/vue@next"></script>
     <script type="module" src="./js/app.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "atl-bg": '#131C26',
+              "atl-sl": '#1D2A39',
+              "atl-1": "#D8DEE6",
+              "atl-2": "#DDE5ED",
+              "atl-3": "#233f6b",
+              "atl-4": "#244881",
+              "atl-5": "#1E86FC",
+              "atl-6": "#384757",
+              "atl-7": "#101b23",
+              "atl-8": "#1F364F",
+              "atl-9": "#06121F",
+              "atl-0": "#131C26",
+              "atl-10": "#101b23",
+              "atl-11": "#888888",
+              "atl-12": "#020f1a",
+              "atl-13": "#101821",
+            },
+            height: {
+              "226": "36.5rem",
+            }
+          }
+        }
+      }
+    </script>
 </body>
 </html>
