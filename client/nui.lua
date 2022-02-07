@@ -11,13 +11,15 @@ RegisterNUICallback('select_character', function(data, cb)
     cb{{ done = false }}
 end)
 
-RegisterNUICallback('create_character', function(_, cb)
+RegisterNUICallback('create_character', function(data, cb)
     if ATL.Active.Multichar then
-        TriggerServerEvent('atl:server:registerNewPlayer')
-        ATL.Active.Multichar = false
-        SetNuiFocus(false, false)
-        cb({ done = true })
-        return
+        if data then
+            TriggerServerEvent('atl:server:registerNewPlayer', data)
+            ATL.Active.Multichar = false
+            SetNuiFocus(false, false)
+            cb({ done = true })
+            return
+        end
     end
     cb({ done = true })
 end)

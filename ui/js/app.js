@@ -88,22 +88,37 @@ const app = Vue.createApp({
                     this.multicharacter.activated = false;
                     this.multicharacter.chars.length = 0;
                 break;
+                case "startIdentity":
+                    this.multicharacter.activated = false;
+                    this.identity.activated = true;
+                break;
             }
         },
         checkIdentity() {
-            console.log(this.identity);
+            const identity = {
+                firstName: this.identity.firstName,
+                lastName: this.identity.lastName,
+                sex: this.identity.sex,
+                dob: this.identity.dob
+            }
+            fetchNui("create_character", {data: identity}).then((resp) => {
+                if (resp.done) {
+                    this.identity.activated = false;
+                    this.multicharacter.activated = false;
+                    this.clearData();
+                } else {
+                    console.log('Error: Could not go back to multicharacter');
+                }
+            });
+        },
+        cancelIdentity() {
+            this.identity.activated = false;
+            this.multicharacter.activated = true;
         },
         checkCharacter() {
             if (this.multicharacter.data === "create") {
-                fetchNui("create_character").then((resp) => {
-                    if (resp.done) {
-                        this.clearData();
-                    } else {
-                        console.log(
-                        "Error: Could not create character. Data was not received"
-                        );
-                    }
-                });
+                this.multicharacter.activated = false
+                this.identity.activated = true
             } else if (this.multicharacter.data !== null) {
                 fetchNui("select_character", {
                     character_id: this.multicharacter.data,
@@ -130,10 +145,9 @@ const app = Vue.createApp({
             });
         },
         clearData() {
-            this.multicharacter.activated = false;
             this.multicharacter.data = null;
             this.multicharacter.charSelection = "Choose a Slot";
-            this.multicharacter.chars.length = 0;
+            this.multicharacter.chars = [];
             this.multicharacter.selected = null;
         },
         setSelected(key) {

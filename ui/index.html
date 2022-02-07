@@ -36,7 +36,7 @@
               :char_elem_id="'char_' + index"
               class="mb-8 ml-16"
               @click="setSelected(index)"
-              @delete-selected="deleteSelected"
+              @delete-selected="deleteSelected(char.character_id)"
             ></char-box>
             <div
               class="flex flex-col items-center justify-between rounded row-span-5 mb-8"
@@ -83,7 +83,7 @@
                 >
                   {{ identityState }}
                 </button>
-                <button class="text-gray-400 font-medium transition duration-200 hover:underline hover:text-gray-200 mt-1">Go back</button>
+                <button @click="cancelIdentity" class="text-gray-400 font-medium transition duration-200 hover:underline hover:text-gray-200 mt-1">Go back</button>
               </div>
             </div>
           </div>
