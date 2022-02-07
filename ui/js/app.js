@@ -136,6 +136,7 @@ const app = Vue.createApp({
         deleteSelected(data) {
             fetchNui("delete_character", { character_id: data }).then((resp) => {
                 if (resp.done) {
+                    this.multicharacter.activated = false
                     this.clearData();
                 } else {
                     console.log(
