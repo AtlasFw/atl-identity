@@ -13,9 +13,14 @@ const fetchNui = async (cbName, data) => {
     return await resp.json();
 };
 
+const isCapitalized = (str) => str.charAt(0) === str.charAt(0).toUpperCase();
+
+const Delay = (seconds) => new Promise((resp) => setTimeout(resp, 995 * seconds, true || false));
+
 const app = Vue.createApp({
     data() {
         return {
+            active: false,
             multicharacter: {
                 activated: false,
                 data: null,
@@ -27,15 +32,44 @@ const app = Vue.createApp({
                 activated: false,
                 firstName: "",
                 lastName: "",
-                sex: "",
-                dob: ""
+                dob: "",
+                sex: ""
             }
         };
     },
   computed: {
     identityState() {
-        const i = this.identity
-        if (!i.firstName || !i.lastName || !i.sex || !i.dob) return 'Missing Information'
+        const iden = this.identity
+        const btn = this.$refs?.acceptI
+        for (const i in iden) {
+            switch (i) {
+                case 'firstName':
+                    if (!iden[i]) return 'Missing First Name'
+                    if (!isCapitalized(iden[i])) return 'First Name Must Be Capitalized'
+                    if (iden[i].match(/[^a-zA-Z]/)) return 'Invalid First Name Characters'
+                break;
+                case 'lastName':
+                    if (!iden[i]) return 'Missing Last Name'
+                    if (!isCapitalized(iden[i])) return 'Last Name Must Be Capitalized'
+                    if (iden[i].match(/[^a-zA-Z]/)) return 'Invalid Last Name Characters'
+                break;
+                case 'dob':
+                    if (!iden[i]) return 'Missing DOB'
+                    if (iden[i].match(/\s/)) return 'DOB cannot contain spaces'
+                    const dob = iden[i].split('/')
+                    if (dob.length !== 3) return 'DOB must be in MM/DD/YYYY'
+                break;
+                case 'sex':
+                    if (!iden[i]) return 'Missing Sex'
+                    if (iden[i].match(/[^a-zA-Z]/)) return 'Invalid Sex Characters'
+                break;
+            }
+        }
+        if (btn?.disabled) {
+            btn.disabled = false
+            btn.classList.remove('ring-red-600')
+            btn.classList.add('ring-atl-300')
+        }
         return 'Create identity'
     }
   },
@@ -43,6 +77,7 @@ const app = Vue.createApp({
         messageHandler(e) {
             switch (e.data.action) {
                 case "startMulticharacter":
+                this.active = true;
                 for (let i = 0; i < e.data.identity.MaxSlots; i++) {
                     if (e.data.playerData[i]) {
                     const test = {
@@ -84,14 +119,6 @@ const app = Vue.createApp({
                 }
                 this.multicharacter.activated = true;
                 break;
-                case "endMulticharacter":
-                    this.multicharacter.activated = false;
-                    this.multicharacter.chars.length = 0;
-                break;
-                case "startIdentity":
-                    this.multicharacter.activated = false;
-                    this.identity.activated = true;
-                break;
             }
         },
         checkIdentity() {
@@ -105,19 +132,28 @@ const app = Vue.createApp({
                 if (resp.done) {
                     this.identity.activated = false;
                     this.multicharacter.activated = false;
+                    this.active = false;
                     this.clearData();
                 } else {
                     console.log('Error: Could not go back to multicharacter');
                 }
             });
         },
-        cancelIdentity() {
+        async cancelIdentity() {
             this.identity.activated = false;
+            await Delay(0.5)
             this.multicharacter.activated = true;
+            this.multicharacter.charSelection =  "Choose a Slot";
+            for (const i in this.identity) {
+                if (i !== 'activated') {
+                    this.identity[i] = '';
+                }
+            }
         },
-        checkCharacter() {
+        async checkCharacter() {
             if (this.multicharacter.data === "create") {
                 this.multicharacter.activated = false
+                await Delay(0.5)
                 this.identity.activated = true
             } else if (this.multicharacter.data !== null) {
                 fetchNui("select_character", {
@@ -125,6 +161,8 @@ const app = Vue.createApp({
                 }).then((resp) => {
                     if (resp.done) {
                         this.clearData();
+                        this.multicharacter.activated = false;
+                        this.active = false;
                     } else {
                         console.log(
                         "Error: Could not select character. Data was not received"
@@ -137,6 +175,7 @@ const app = Vue.createApp({
             fetchNui("delete_character", { character_id: data }).then((resp) => {
                 if (resp.done) {
                     this.multicharacter.activated = false
+                    this.active = false;
                     this.clearData();
                 } else {
                     console.log(
@@ -172,21 +211,21 @@ const app = Vue.createApp({
             this.selected.classList.remove("border-b-4", "border-r-4");
             switch (target.getAttribute("data-char-id")) {
                 case "create":
-                this.multicharacter.charSelection = "Create Character";
-                this.multicharacter.data = "create";
+                    this.multicharacter.charSelection = "Create Character";
+                    this.multicharacter.data = "create";
                 break;
                 case "blocked":
-                target.classList.add("ring-4", "ring-red-600");
-                this.multicharacter.charSelection = "Blocked Character";
-                this.$refs.creation.style.backgroundColor = "#d52b2b";
-                this.$refs.creation.disabled = true;
-                this.multicharacter.data = null;
-                return;
+                    target.classList.add("ring-4", "ring-red-600");
+                    this.multicharacter.charSelection = "Blocked Character";
+                    this.$refs.creation.style.backgroundColor = "#d52b2b";
+                    this.$refs.creation.disabled = true;
+                    this.multicharacter.data = null;
+                    return;
                 default:
-                this.multicharacter.data = parseInt(
-                    target.getAttribute("data-char-id")
-                );
-                this.multicharacter.charSelection = "Select Character";
+                    this.multicharacter.data = parseInt(
+                        target.getAttribute("data-char-id")
+                    );
+                    this.multicharacter.charSelection = "Select Character";
                 break;
             }
             target.classList.add("ring-4", "ring-sky-600");
@@ -268,7 +307,7 @@ app.component('custom-input', {
 	      <div class="w-5/6 flex flex-col items-center">
                 <span class="self-start mb-2 text-gray-300 font-spline-sans font-semibold">{{ title }}:</span>
                 <label class="w-full">
-                  <input :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" class="w-full h-8 rounded outline-none px-4 py-2 border-2 border-gray-300 shadow-sm">
+                  <input :value="modelValue" @input="$emit('update:modelValue', $event.target.value);" class="capitilize w-full h-8 rounded outline-none px-4 py-2 border-2 border-gray-300 shadow-sm">
                 </label>
           </div>
 	`,
