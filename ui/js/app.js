@@ -24,16 +24,20 @@ const app = Vue.createApp({
             multicharacter: {
                 activated: false,
                 data: null,
-                chars: [],
-                charSelection: "Choose a Slot",
                 selected: null,
+                charSelection: "Choose a Slot",
+                chars: [],
             },
             identity: {
                 activated: false,
+                minYear: null,
+                maxYear: null,
+                minChars: null,
+                maxChars: null,
                 firstName: "",
                 lastName: "",
                 dob: "",
-                sex: ""
+                sex: "",
             }
         };
     },
@@ -45,11 +49,15 @@ const app = Vue.createApp({
             switch (i) {
                 case 'firstName':
                     if (!iden[i]) return 'Missing First Name'
+                    if (iden[i].length < this.identity.minChars) return `${this.identity.minChars} Characters Required`
+                    if (iden[i].length > this.identity.maxChars) return `${this.identity.maxChars} Characters Required`
                     if (!isCapitalized(iden[i])) return 'First Name Must Be Capitalized'
                     if (iden[i].match(/[^a-zA-Z]/)) return 'Invalid First Name Characters'
                 break;
                 case 'lastName':
                     if (!iden[i]) return 'Missing Last Name'
+                    if (iden[i].length < this.identity.minChars) return `${this.identity.minChars} Characters Required`
+                    if (iden[i].length > this.identity.maxChars) return `${this.identity.maxChars} Characters Required`
                     if (!isCapitalized(iden[i])) return 'Last Name Must Be Capitalized'
                     if (iden[i].match(/[^a-zA-Z]/)) return 'Invalid Last Name Characters'
                 break;
@@ -57,7 +65,10 @@ const app = Vue.createApp({
                     if (!iden[i]) return 'Missing DOB'
                     if (iden[i].match(/\s/)) return 'DOB cannot contain spaces'
                     const dob = iden[i].split('/')
-                    if (dob.length !== 3) return 'DOB must be in MM/DD/YYYY'
+                    if (dob.length !== 3 || dob[2]?.length !== 4) return 'DOB must be in MM/DD/YYYY'
+                    if (dob[0] < 1 || dob[0] > 12) return 'Invalid Month'
+                    if (dob[1] < 1 || dob[1] > 31) return 'Invalid Day'
+                    if (dob[2] < this.identity.minYear || dob[2] > this.identity.maxYear) return 'Invalid Year'
                 break;
                 case 'sex':
                     if (!iden[i]) return 'Missing Sex'
@@ -75,10 +86,15 @@ const app = Vue.createApp({
   },
     methods: {
         messageHandler(e) {
+            const { MaxSlots, AllowedSlots, MaxChars, MinChars, MinYear, MaxYear } = e.data.identity;
+            this.identity.minYear = MinYear;
+            this.identity.maxYear = MaxYear;
+            this.identity.minChars = MinChars;
+            this.identity.maxChars = MaxChars;
             switch (e.data.action) {
                 case "startMulticharacter":
                 this.active = true;
-                for (let i = 0; i < e.data.identity.MaxSlots; i++) {
+                for (let i = 0; i < MaxSlots; i++) {
                     if (e.data.playerData[i]) {
                     const test = {
                         character_id: e.data.playerData[i].character_id,
@@ -102,8 +118,7 @@ const app = Vue.createApp({
                     this.multicharacter.chars.push(test);
                     continue;
                     }
-
-                    if (i >= e.data.identity.AllowedSlots) {
+                    if (i >= AllowedSlots) {
                     this.multicharacter.chars.push({
                         character_id: "blocked",
                     });
@@ -143,6 +158,7 @@ const app = Vue.createApp({
             this.identity.activated = false;
             await Delay(0.5)
             this.multicharacter.activated = true;
+            this.multicharacter.data = null;
             this.multicharacter.charSelection =  "Choose a Slot";
             for (const i in this.identity) {
                 if (i !== 'activated') {
@@ -164,9 +180,7 @@ const app = Vue.createApp({
                         this.multicharacter.activated = false;
                         this.active = false;
                     } else {
-                        console.log(
-                        "Error: Could not select character. Data was not received"
-                        );
+                        console.log("Error: Could not select character. Data was not received");
                     }
                 });
             }
@@ -185,10 +199,18 @@ const app = Vue.createApp({
             });
         },
         clearData() {
-            this.multicharacter.data = null;
             this.multicharacter.charSelection = "Choose a Slot";
             this.multicharacter.chars = [];
+            this.multicharacter.data = null;
             this.multicharacter.selected = null;
+            this.identity.minYear = null;
+            this.identity.maxYear = null;
+            this.identity.minChars = null;
+            this.identity.maxChars = null;
+            this.identity.firstName = "";
+            this.identity.lastName = "";
+            this.identity.dob = "";
+            this.identity.sex = "";
         },
         setSelected(key) {
             const target = document.getElementById(`char_${key}`);
@@ -197,18 +219,19 @@ const app = Vue.createApp({
                 this.$refs.creation.disabled = false;
             }
 
-            if (this.selected) {
-                this.selected.classList.remove("ring-4", "ring-sky-600");
-                this.selected.classList.add("border-b-4", "border-r-4");
-                if (this.selected === target) {
-                this.multicharacter.charSelection = "Choose a Slot";
-                this.selected = null;
-                return;
+            if (this.multicharacter.selected) {
+                this.multicharacter.selected.classList.remove("ring-4", "ring-sky-600");
+                this.multicharacter.selected.classList.add("border-b-4", "border-r-4");
+                if (this.multicharacter.selected === target) {
+                    this.multicharacter.charSelection = "Choose a Slot";
+                    this.multicharacter.selected = null;
+                    this.multicharacter.data = null;
+                    return;
                 }
             }
-            this.selected = target;
+            this.multicharacter.selected = target;
             target.classList.add("ring-4", "ring-sky-600");
-            this.selected.classList.remove("border-b-4", "border-r-4");
+            this.multicharacter.selected.classList.remove("border-b-4", "border-r-4");
             switch (target.getAttribute("data-char-id")) {
                 case "create":
                     this.multicharacter.charSelection = "Create Character";

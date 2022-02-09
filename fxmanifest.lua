@@ -16,3 +16,5 @@ files {
 client_scripts {
     'client/*.lua'
 }
+
+provide 'identity'
