@@ -4,6 +4,8 @@ ATL.Active = {
     Identity = false
 }
 
+RequestIpl('gr_grdlc_int_01')
+
 local function startMulticharacter(playerData, identity)
     ATL.Active.Multichar = true
     DoScreenFadeOut(1500)
