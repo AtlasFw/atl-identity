@@ -3,12 +3,11 @@ import { NConfigProvider, NDialogProvider, darkTheme } from 'naive-ui'
 import { reactive } from "vue";
 import Intro from './views/Intro.vue'
 import Multicharacter from './views/Multicharacter.vue'
-import Identity from './views/Identity.vue'
 
 const state = reactive({
-  login: true,
+  login: false,
   multicharacter: {
-    state: false,
+    state: true,
     characters: [
       {
         char_id: '120',
@@ -31,9 +30,6 @@ const state = reactive({
         quote: 'Blocked character identity slot.'
       }
     ]
-  },
-  identity: {
-    state: false
   }
 })
 const switchState = (type) => {
@@ -59,9 +55,6 @@ const switchState = (type) => {
           </transition>
           <transition name="fade">
             <Multicharacter v-if="state.multicharacter.state" @startlogin="switchState" :chars="state.multicharacter.characters"/>
-          </transition>
-          <transition name="fade">
-            <Identity v-if="state.identity.state" @startidentity="switchState"/>
           </transition>
         </n-dialog-provider>
       </n-config-provider>
