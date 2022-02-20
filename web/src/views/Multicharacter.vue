@@ -188,7 +188,7 @@ const deleteCharacter = () => {
           <NIcon size="large" v-else-if="data.id === 'create'">
             <PersonAdd class="h-64 w-64"/>
           </NIcon>
-          <template v-else>#120</template>
+          <template v-else>#{{ data.id }}</template>
         </template>
         <template v-if="!data.char && data.id !== 'create'">
           <n-skeleton text/>
@@ -232,7 +232,7 @@ const deleteCharacter = () => {
               <NInput placeholder="Something interesting about you" v-model:value="identity.quote" type="textarea" maxlength="30" show-count clearable :autosize="{ minRows: 2, maxRows: 2 }"/>
             </NFormItem>
             <NFormItem>
-              <NButton class="w-full h-full" @click.prevent="createCharacter" :focusable="false">Create Character</NButton>
+              <NButton class="w-full" @click.prevdient="createCharacter" :focusable="false">Create Character</NButton>
             </NFormItem>
           </NForm>
         </template>
