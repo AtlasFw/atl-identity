@@ -1,20 +1,23 @@
 <script setup>
-import { NCard, NButton, NSkeleton } from 'naive-ui'
-import { ref, reactive, defineProps } from 'vue'
+import { Trash } from '@vicons/ionicons5'
+import { NCard, NButton, NSkeleton, NIcon, NPopconfirm } from 'naive-ui'
+import { reactive } from 'vue'
+import { fetchNui } from '../utils/fetchNui.js'
 defineProps({
   chars: {
     type: Array,
     required: false
   }
 })
-
-const charBtnText = ref('Select a slot')
 const data = reactive({
+  btnText: 'Select a Slot',
   selected: null,
   id: null,
   char: null,
 })
+
 const setSelected = ({currentTarget}) => {
+  console.log('pressed')
   if (currentTarget.tagName !== 'DIV') return;
 
   if (data.selected) {
@@ -25,7 +28,7 @@ const setSelected = ({currentTarget}) => {
     if (data.selected === currentTarget) {
       data.selected = null;
       data.char = null;
-      charBtnText.value = "Select a Slot";
+      data.btnText = "Select a Slot";
       return;
     }
   }
@@ -35,38 +38,70 @@ const setSelected = ({currentTarget}) => {
     case "create":
       data.id = "create";
       data.char = null;
-      charBtnText.value = "Create Character";
+      data.btnText = "Create Character";
       break;
     case "blocked":
       data.disabled = true;
       data.id = null;
       data.char = null;
-      charBtnText.value = "Blocked Character";
+      data.btnText = "Blocked Character";
       currentTarget.classList.add("ring-4", "ring-red-600");
       return;
     default:
       data.id = parseInt(currentTarget.getAttribute("data-char-id"));
-      data.char = currentTarget.getAttribute("data-char");
-      charBtnText.value = "Select Character";
+      data.char = JSON.parse(currentTarget.getAttribute("data-char"));
+      data.btnText = "Select Character";
       break;
   }
   currentTarget.classList.add("ring-4", "ring-sky-600");
 }
-
+const clearData = () => {
+  data.selected.classList.remove("ring-4", "ring-sky-600", "ring-red-600");
+  data.selected = null;
+  data.disabled = false;
+  data.id = null;
+  data.char = null;
+  data.btnText = "Select a Slot";
+}
+const chooseSlot = () => {
+  if (data.id === null) return;
+  if (data.id === "create") {
+    clearData();
+    return;
+  }
+  fetchNui("select_character", data.id);
+  clearData();
+}
+const deleteCharacter = () => {
+  console.log('Deleting character')
+}
 </script>
 
 <template>
   <div class="h-full w-full grid grid-cols-10">
     <div class="h-full overflow-hidden col-span-2">
       <div class="h-5/6 flex flex-col items-center justify-start scrollbar scroll-smooth scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-700">
-        <NCard class="w-5/6 bg-slate-800 mt-6" size="small" :segmented="{ content: true }" v-for="(char, index) in chars" :key="index" :data-char-id="char.char_id" :data-char="char" :title="`${char.firstname} ${char.lastname}`" @click="setSelected">
-          <template v-if="char.char_id !== 'create' && char.char_id !== 'blocked'" #header-extra>#{{ char.char_id  }}</template>
+        <NCard class="w-5/6 bg-slate-800 mt-6" size="small" :segmented="{ content: true }" v-for="(char, index) in chars" :key="index" :data-char-id="char.char_id" :data-char="JSON.stringify(char)" :title="`${char.firstname} ${char.lastname}`" @click.left="setSelected">
+          <template v-if="char.char_id !== 'create' && char.char_id !== 'blocked'" #header-extra>
+            <NPopconfirm trigger="hover" @positive-click="deleteCharacter">
+              <template #trigger>
+                <n-button size="small" tertiary circle type="error">
+                  <template #icon>
+                    <NIcon>
+                      <Trash/>
+                    </NIcon>
+                  </template>
+                </n-button>
+              </template>
+              <span>Are you sure you want to delete your character? This action is irreversible.</span>
+            </NPopconfirm>
+          </template>
           {{ char.quote }}
         </NCard>
       </div>
       <div class="h-1/6 flex flex-col items-center justify-end overflow-hidden">
-        <NButton class="w-5/6 h-2/5 text-lg" :focusable="false" ghost strong :disabled="data.disabled" :type="data.disabled ?  'error' : 'info'">{{ charBtnText }}</NButton>
-        <NButton @click="$emit('startlogin', 'login')" class="mb-5 mt-2.5 text-gray-600 hover:underline" text ghost strong type="error">Go Back</NButton>
+        <NButton @click="chooseSlot" class="w-5/6 h-2/5 text-lg" :focusable="false" ghost strong :disabled="data.disabled" :type="data.disabled ?  'error' : 'info'">{{ data.btnText }}</NButton>
+        <NButton @click="$emit('startlogin', 'login')" class="mb-5 mt-2.5 hover:underline" text strong type="error">Go Back</NButton>
       </div>
     </div>
     <div class="h-full col-span-5"></div>

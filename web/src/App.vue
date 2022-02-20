@@ -6,9 +6,9 @@ import Multicharacter from './views/Multicharacter.vue'
 import Identity from './views/Identity.vue'
 
 const state = reactive({
-  login: false,
+  login: true,
   multicharacter: {
-    state: true,
+    state: false,
     characters: [
       {
         char_id: '120',
@@ -31,9 +31,11 @@ const state = reactive({
         quote: 'Blocked character identity slot.'
       }
     ]
+  },
+  identity: {
+    state: false
   }
 })
-
 const switchState = (type) => {
   if (type === 'login') {
     state.login = true
@@ -45,6 +47,7 @@ const switchState = (type) => {
   }
   state[type].state = !state[type].state
 }
+
 </script>
 
 <template>
@@ -56,6 +59,9 @@ const switchState = (type) => {
           </transition>
           <transition name="fade">
             <Multicharacter v-if="state.multicharacter.state" @startlogin="switchState" :chars="state.multicharacter.characters"/>
+          </transition>
+          <transition name="fade">
+            <Identity v-if="state.identity.state" @startidentity="switchState"/>
           </transition>
         </n-dialog-provider>
       </n-config-provider>
