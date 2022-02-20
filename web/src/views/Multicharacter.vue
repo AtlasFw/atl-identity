@@ -143,7 +143,17 @@ const createCharacter = () => {
   })
 }
 const deleteCharacter = () => {
-  console.log('Deleting character')
+  if (data.id && data.char) {
+    fetchNui("select_character", {
+      char_id: data.id,
+    }).then((resp) => {
+      if (resp.done) {
+
+      } else {
+        console.log("Error: Could not select character. Data was not received");
+      }
+    });
+  }
 }
 </script>
 
