@@ -217,10 +217,10 @@ const deleteCharacter = () => {
         <template v-else-if="data.id === 'create'">
           <NForm ref="formRef" :rules="rules" :model="identity" size="medium">
             <NFormItem label="First Name" path="firstname">
-              <NInput v-model:value="identity.firstname" placeholder="Input first name" />
+              <NInput v-model:value="identity.firstname" placeholder="Input first name" maxlength="16" show-count clearable/>
             </NFormItem>
             <NFormItem label="Last Name" path="lastname">
-              <NInput v-model:value="identity.lastname" placeholder="Input last name" />
+              <NInput v-model:value="identity.lastname" placeholder="Input last name" maxlength="16" show-count clearable/>
             </NFormItem>
             <NFormItem label="Date of Birth" :validation-status="dobStatus" :feedback="dobFeedback" path="dob">
               <NDatePicker type="date" v-model:value="identity.dob"></NDatePicker>
@@ -229,7 +229,7 @@ const deleteCharacter = () => {
               <NSelect placeholder="Select sex" :options="identity.selectSex" v-model:value="identity.sex"/>
             </NFormItem>
             <NFormItem label="Quote" path="quote">
-              <NInput placeholder="Something interesting about you" v-model:value="identity.quote" type="textarea" :autosize="{ minRows: 2, maxRows: 2 }"/>
+              <NInput placeholder="Something interesting about you" v-model:value="identity.quote" type="textarea" maxlength="30" show-count clearable :autosize="{ minRows: 2, maxRows: 2 }"/>
             </NFormItem>
             <NFormItem>
               <NButton class="w-full h-full" @click.prevent="createCharacter" :focusable="false">Create Character</NButton>
