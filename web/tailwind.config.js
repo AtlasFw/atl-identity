@@ -7,8 +7,19 @@ module.exports = {
 		extend: {
 		    colors: {
                 "atl-1": "#215F96",
-		    }
+		    },
+		    borderWidth: {
+                "1": "1px",
+            },
+            height: {
+                "95%": "95%",
+            },
+            width: {
+                "90%": "90%",
+            }
 		},
 	},
-	plugins: [],
+	plugins: [
+	    require('tailwind-scrollbar'),
+	],
 }

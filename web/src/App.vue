@@ -6,12 +6,20 @@ import Multicharacter from './views/Multicharacter.vue'
 import Identity from './views/Identity.vue'
 
 const state = reactive({
-  login: true,
+  login: false,
   multicharacter: {
-    state: false,
-  },
-  identity: {
-    state: false
+    state: true,
+    characters: [
+      {
+        char_id: '120',
+        firstname: 'Mauricio',
+        lastname: 'Gonzalez',
+        dob: '01/01/2000',
+        sex: 'female',
+        quote: 'I am a very cool person with a very cool name!'
+      }
+    ],
+    selected: new Map()
   }
 })
 
@@ -24,17 +32,16 @@ const switchState = (type) => {
 </script>
 
 <template>
-  <n-config-provider class="bg-black w-full h-full" :theme="darkTheme">
-      <div class="bg-black w-full h-full">
-        <n-dialog-provider :theme="darkTheme">
+    <div class="bg-black w-full h-full">
+      <n-config-provider class="bg-black w-full h-full" :theme="darkTheme">
+        <n-dialog-provider>
           <transition name="fade">
             <Intro v-if="state.login" @startmulticharacter="switchState"/>
           </transition>
-          <Multicharacter v-if="state.multicharacter.state"/>
-          <Identity v-if="state.identity.state"/>
+          <Multicharacter v-if="state.multicharacter.state" :active="true" :chars="state.multicharacter.characters"/>
         </n-dialog-provider>
-      </div>
-  </n-config-provider>
+      </n-config-provider>
+    </div>
 </template>
 
 <style>
