@@ -11,8 +11,8 @@ defineProps({
 const charBtnText = ref('Select a slot')
 const data = reactive({
   selected: null,
-  id: true,
-  char: true,
+  id: null,
+  char: null,
 })
 const setSelected = ({currentTarget}) => {
   if (currentTarget.tagName !== 'DIV') return;
@@ -78,9 +78,34 @@ const setSelected = ({currentTarget}) => {
             Character Information
           </template>
         </template>
-        <template #header-extra v-if="!data.char">#</template>
-        <template #header-extra v-else>#120</template>
-        <n-skeleton v-if="!data.char" :repeat="20" text width="60%"/>
+        <template #header-extra>
+          <n-skeleton v-if="!data.char" circle width="20px"/>
+          <template v-else>#120</template>
+        </template>
+        <template v-if="!data.char">
+          <n-skeleton text/>
+          <n-skeleton text style="width: 60%;"/>
+          <n-skeleton text style="width: 80%;"/>
+          <n-skeleton text style="width: 45%;"/>
+          <n-skeleton text style="width: 60%;"/>
+          <n-skeleton text/>
+          <n-skeleton text style="width: 95%;"/>
+          <n-skeleton text style="width: 80%;"/>
+          <n-skeleton text style="width: 45%;"/>
+          <n-skeleton text style="width: 82%;"/>
+          <n-skeleton text/>
+          <n-skeleton text style="width: 60%;"/>
+          <n-skeleton text style="width: 72%;"/>
+          <n-skeleton text style="width: 45%;"/>
+          <n-skeleton text style="width: 65%;"/>
+          <n-skeleton text/>
+          <n-skeleton text style="width: 60%;"/>
+          <n-skeleton text style="width: 80%;"/>
+          <n-skeleton text style="width: 45%;"/>
+          <n-skeleton text style="width: 90%;"/>
+          <n-skeleton text/>
+          <n-skeleton text style="width: 70%;"/>
+        </template>
         <template v-else>
           <div class="relative">
             <h2 class="text-lg font-medium border-b-1 text-center mb-4">Personal Information</h2>
