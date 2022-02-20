@@ -16,7 +16,7 @@ const handleLeave = () => {
 
 <template>
   <div class="h-full w-full flex items-center justify-end flex-col">
-      <NButton @click="$emit('startmulticharacter', 'multicharacter')" class="w-64 h-14 text-lg" :focusable="false" color="#215F96" ghost strong type="info">Get Started</NButton>
+      <NButton @click="$emit('startmulticharacter', 'multicharacter')" class="w-64 h-14 text-lg" :focusable="false" ghost strong type="info">Get Started</NButton>
       <NButton @click="handleLeave" class="mb-5 mt-2.5 text-gray-600 hover:underline" text ghost strong type="error">Leave</NButton>
   </div>
 </template>

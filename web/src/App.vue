@@ -17,13 +17,29 @@ const state = reactive({
         dob: '01/01/2000',
         sex: 'female',
         quote: 'I am a very cool person with a very cool name!'
+      },
+      {
+        char_id: 'create',
+        firstname: 'Create',
+        lastname: 'Character',
+        quote: 'Create a new identity and begin your life.'
+      },
+      {
+        char_id: 'blocked',
+        firstname: 'Blocked',
+        lastname: 'Character',
+        quote: 'Blocked character identity slot.'
       }
-    ],
-    selected: new Map()
+    ]
   }
 })
 
 const switchState = (type) => {
+  if (type === 'login') {
+    state.login = true
+    state.multicharacter.state = false
+    return;
+  }
   if (state.login) {
     state.login = false
   }
@@ -38,7 +54,9 @@ const switchState = (type) => {
           <transition name="fade">
             <Intro v-if="state.login" @startmulticharacter="switchState"/>
           </transition>
-          <Multicharacter v-if="state.multicharacter.state" :active="true" :chars="state.multicharacter.characters"/>
+          <transition name="fade">
+            <Multicharacter v-if="state.multicharacter.state" @startlogin="switchState" :chars="state.multicharacter.characters"/>
+          </transition>
         </n-dialog-provider>
       </n-config-provider>
     </div>
