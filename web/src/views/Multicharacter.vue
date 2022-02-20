@@ -27,8 +27,8 @@ defineProps({
       </div>
     </div>
     <div class="h-full col-span-5"></div>
-    <div class="h-full col-span-3 flex justify-center items-center">
-      <NCard class="w-3/4 h-4/6 rounded-lg bg-slate-800 overflow-hidden" n-skeleton size="medium" :segmented="{ content: true, footer: 'soft'}">
+    <div class="relative h-full col-span-3 flex justify-center items-center">
+      <NCard class="relative w-4/6 h-4/6 rounded-lg bg-slate-800 scrollbar scroll-smooth" n-skeleton size="medium" :segmented="{ content: true, footer: 'soft'}">
         <template #header>
           <n-skeleton v-if="!active" text width="55%"/>
           <template v-else>
@@ -39,27 +39,25 @@ defineProps({
         <template #header-extra v-else>#120</template>
         <n-skeleton v-if="!active" text width="60%"/>
         <template v-else>
-          <div class="h-95% scrollbar scroll-smooth scrollbar-thin scrollbar-track-slate-800 scrollbar-thumb-slate-700 overflow-hidden">
-            <h2 class="text-lg font-medium border-b-1 text-center mb-4 w-90%">Personal Information</h2>
-            <span class="ml-3 w-90%">First Name: {{}}</span><br>
-            <span class="ml-3 w-90%">Last Name: {{}}</span><br>
-            <span class="ml-3 w-90%">Date of Birth: {{}}</span><br>
-            <span class="ml-3 w-90%">Sex: {{}}</span><br>
-            <h2 class="text-lg font-medium border-b-1 text-center mb-4 w-90%">Job Information</h2>
-            <span class="ml-3 w-90%">Job: {{}}</span><br>
-            <span class="ml-3 w-90%">Job Grade: {{}}</span><br>
-            <span class="ml-3 w-90%">Job Payment: {{}}</span><br>
-            <span class="ml-3 w-90%">Job Payment Cut: {{}}</span>
-            <h2 class="text-lg font-medium border-b-1 text-center mb-4 w-90%">Accounts Information</h2>
-            <span class="ml-3 w-90%">Cash on Hand: {{}}</span><br>
-            <span class="ml-3 w-90%">Bank Account: {{}}</span><br>
-            <span class="ml-3 w-90%">Counterfeit Money: {{}}</span><br>
-            <span class="ml-3 w-90%">Special Coins: {{}}</span><br>
-            <h2 class="text-lg font-medium border-b-1 text-center mb-4 w-90%">Other Information</h2>
-            <span class="ml-3 w-90%">Last Street: {{}}</span><br>
-            <span class="ml-3 w-90%">Something Else: {{}}</span><br>
-            <span class="ml-3 w-90%">Something Else: {{}}</span><br>
-            <span class="ml-3 w-90%">Quote: {{}}</span><br>
+          <div class="relative">
+            <h2 class="text-lg font-medium border-b-1 text-center mb-4">Personal Information</h2>
+            <span class="ml-3">First Name: {{}}</span><br>
+            <span class="ml-3">Last Name: {{}}</span><br>
+            <span class="ml-3">Date of Birth: {{}}</span><br>
+            <span class="ml-3">Sex: {{}}</span><br>
+            <h2 class="text-lg font-medium border-b-1 text-center mb-4">Job Information</h2>
+            <span class="ml-3">Job: {{}}</span><br>
+            <span class="ml-3">Job Grade: {{}}</span><br>
+            <span class="ml-3">Job Payment: {{}}</span><br>
+            <span class="ml-3">Job Payment Cut: {{}}</span>
+            <h2 class="text-lg font-medium border-b-1 text-center mb-4">Accounts Information</h2>
+            <span class="ml-3">Cash on Hand: ${{}}</span><br>
+            <span class="ml-3">Bank Account: ${{}}</span><br>
+            <span class="ml-3">Counterfeit Money: ${{}}</span><br>
+            <span class="ml-3">Special Coins: &#65284;{{}}</span><br>
+            <h2 class="text-lg font-medium border-b-1 text-center mb-4">Other Information</h2>
+            <span class="ml-3">Last Street: {{}}</span><br>
+            <span class="ml-3">Quote: {{}}</span><br>
           </div>
         </template>
       </NCard>
