@@ -81,7 +81,6 @@ const rules = {
   }
 }
 const setSelected = ({currentTarget}) => {
-  console.log('pressed')
   if (currentTarget.tagName !== 'DIV') return;
 
   if (data.selected) {

@@ -7,29 +7,8 @@ import Multicharacter from './views/Multicharacter.vue'
 const state = reactive({
   login: false,
   multicharacter: {
-    state: true,
-    characters: [
-      {
-        char_id: '120',
-        firstname: 'Mauricio',
-        lastname: 'Gonzalez',
-        dob: '01/01/2000',
-        sex: 'female',
-        quote: 'I am a very cool person with a very cool name!'
-      },
-      {
-        char_id: 'create',
-        firstname: 'Create',
-        lastname: 'Character',
-        quote: 'Create a new identity and begin your life.'
-      },
-      {
-        char_id: 'blocked',
-        firstname: 'Blocked',
-        lastname: 'Character',
-        quote: 'Blocked character identity slot.'
-      }
-    ]
+    state: false,
+    characters: []
   }
 })
 const switchState = (type) => {
@@ -100,7 +79,7 @@ onUnmounted(() => {
 
 <template>
     <div class="w-full h-full">
-      <n-config-provider class="bg-black w-full h-full" :theme="darkTheme">
+      <n-config-provider class="w-full h-full" :theme="darkTheme">
         <n-dialog-provider>
           <transition name="fade">
             <Intro v-if="state.login" @startmulticharacter="switchState"/>
