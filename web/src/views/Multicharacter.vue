@@ -80,6 +80,7 @@ const setSelected = ({currentTarget}) => {
   if (data.selected) {
     data.selected.classList.remove("ring-4", "ring-sky-600", "ring-red-600");
     if (data.selected === currentTarget) {
+      fetchNui('select_character', {state: false})
       data.selected = null;
       data.id = null;
       data.char = null;
@@ -92,6 +93,7 @@ const setSelected = ({currentTarget}) => {
     case "create":
       data.id = "create";
       data.char = null;
+      fetchNui('select_character', {state: false, appearance: {}})
       break;
     case "blocked":
       data.id = null;
@@ -101,6 +103,7 @@ const setSelected = ({currentTarget}) => {
     default:
       data.id = parseInt(currentTarget.getAttribute("data-char-id"));
       data.char = JSON.parse(currentTarget.getAttribute("data-char"));
+      fetchNui('select_character', {state: true, appearance: data.char.appearance})
       break;
   }
   currentTarget.classList.add("ring-4", "ring-sky-600");

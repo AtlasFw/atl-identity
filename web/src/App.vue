@@ -41,6 +41,8 @@ const messageHandler = (e) => {
             const identity = JSON.parse(player.identity);
             const accounts = JSON.parse(player.accounts);
             const job = JSON.parse(player.job_data);
+            const appearance = JSON.stringify(player.appearance);
+            console.log(appearance)
             state.multicharacter.characters.push({
                 char_id: player.char_id,
                 firstname: identity.firstname,
@@ -53,7 +55,8 @@ const messageHandler = (e) => {
                     bank: accounts.bank,
                     black: accounts.black,
                     tebex: accounts.tebex
-                }
+                },
+                appearance: appearance
             });
             continue;
           }
