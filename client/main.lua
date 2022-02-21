@@ -27,7 +27,7 @@ local function requestCamera(p, coords)
         RenderScriptCams(true, false, 0, true, true)
     end
     -- Set invincible too would be nice
-    -- SetEntityVisible(PlayerPedId(), true)
+    SetEntityVisible(PlayerPedId(), false)
     p:resolve({error = false})
 end
 

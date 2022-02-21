@@ -80,7 +80,7 @@ const setSelected = ({currentTarget}) => {
   if (data.selected) {
     data.selected.classList.remove("ring-4", "ring-sky-600", "ring-red-600");
     if (data.selected === currentTarget) {
-      fetchNui('select_character', {state: false})
+      fetchNui('update_character', {state: false})
       data.selected = null;
       data.id = null;
       data.char = null;
@@ -93,7 +93,7 @@ const setSelected = ({currentTarget}) => {
     case "create":
       data.id = "create";
       data.char = null;
-      fetchNui('select_character', {state: false, appearance: {}})
+      fetchNui('update_character', {state: false, appearance: {}})
       break;
     case "blocked":
       data.id = null;
@@ -103,7 +103,7 @@ const setSelected = ({currentTarget}) => {
     default:
       data.id = parseInt(currentTarget.getAttribute("data-char-id"));
       data.char = JSON.parse(currentTarget.getAttribute("data-char"));
-      fetchNui('select_character', {state: true, appearance: data.char.appearance})
+      fetchNui('update_character', {state: true, appearance: data.char.appearance})
       break;
   }
   currentTarget.classList.add("ring-4", "ring-sky-600");
@@ -173,7 +173,7 @@ const deleteCharacter = (char_id) => {
 <template>
   <div class="h-full w-full grid grid-cols-10">
     <div class="flex flex-col justify-between overflow-hidden col-span-2">
-      <div class="mask mt-3 flex flex-col items-center justify-start scrollbar scroll-smooth scrollbar-track-slate-800 scrollbar-thumb-slate-700">
+      <div class="mask mt-3 flex flex-col items-center justify-start scrollbar scroll-smooth">
         <NCard class="w-5/6 bg-slate-800 mt-3.5 mb-3.5" size="small" :segmented="{ content: true }" v-for="(char, index) in chars" :key="index" :data-char-id="char.char_id" :data-char="JSON.stringify(char)" :title="`${char.firstname} ${char.lastname}`" @click.left="setSelected">
           <template v-if="char.char_id !== 'create' && char.char_id !== 'blocked'" #header-extra>
             <NPopconfirm trigger="click" @positive-click="deleteCharacter(char.char_id)">

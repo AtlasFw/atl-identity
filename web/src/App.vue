@@ -41,8 +41,7 @@ const messageHandler = (e) => {
             const identity = JSON.parse(player.identity);
             const accounts = JSON.parse(player.accounts);
             const job = JSON.parse(player.job_data);
-            const appearance = JSON.stringify(player.appearance);
-            console.log(appearance)
+            const appearance = JSON.parse(player.appearance);
             state.multicharacter.characters.push({
                 char_id: player.char_id,
                 firstname: identity.firstname,
