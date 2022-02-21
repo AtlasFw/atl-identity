@@ -1,6 +1,6 @@
 <script setup>
 import { Trash, PersonAdd } from '@vicons/ionicons5'
-import { NCard, NButton, NSkeleton, NIcon, NPopconfirm, NForm, NFormItem, NInput, NDatePicker, NSelect } from 'naive-ui'
+import { NCard, NButton, NSkeleton, NIcon, NPopconfirm, NForm, NFormItem, NInput, NDatePicker, NSelect, useMessage } from 'naive-ui'
 import { ref, reactive, computed } from 'vue'
 import { fetchNui } from '../utils/fetchNui.js'
 defineProps({
@@ -9,8 +9,8 @@ defineProps({
     required: false
   }
 })
+const message = useMessage()
 const emit = defineEmits(['close'])
-
 const formRef = ref(null)
 const data = reactive({
   selected: null,
@@ -46,7 +46,6 @@ const dobFeedback = computed(() => {
   }
   return undefined
 })
-
 
 const rules = {
   firstname: {
@@ -120,9 +119,11 @@ const selectCharacter = () => {
       char_id: data.id,
     }).then((resp) => {
       if (resp.done) {
+        message.success('Selected character.')
         clearData()
         emit('close')
       } else {
+          message.error('Could not select character.')
         console.log("Error: Could not select character. Data was not received");
       }
     });
@@ -130,15 +131,22 @@ const selectCharacter = () => {
 }
 const createCharacter = () => {
   formRef.value.validate((errors) => {
-    if (errors) return;
-    fetchNui("create_character", {data: identity}).then((resp) => {
-      if (resp.done) {
-        clearData()
-        emit('close')
-      } else {
-        console.log('Error: Could not go back to multicharacter');
-      }
-    });
+    if (errors) {
+        message.error('Please check your input.')
+    } else {
+        fetchNui("create_character", {data: identity}).then((resp) => {
+            if (resp.done) {
+                message.success('Created character successfully.')
+                clearData()
+                emit('close')
+            } else {
+                message.error('Error creating character.')
+                console.log('Error: Could not create character');
+            }
+        });
+    }
+  }).catch(() => {
+    return
   })
 }
 const deleteCharacter = (char_id) => {
@@ -147,9 +155,11 @@ const deleteCharacter = (char_id) => {
       char_id: char_id,
     }).then((resp) => {
       if (resp.done) {
+        message.success('Character deleted successfully.')
         clearData()
         emit('close')
       } else {
+          message.error('Error deleting character.')
         console.log("Error: Could not delete character. Data was not received");
       }
     });

@@ -1,5 +1,5 @@
 <script setup>
-import { NConfigProvider, NDialogProvider, darkTheme } from 'naive-ui'
+import { NConfigProvider, NDialogProvider, NMessageProvider, darkTheme } from 'naive-ui'
 import { reactive, onMounted, onUnmounted } from "vue";
 import Intro from './views/Intro.vue'
 import Multicharacter from './views/Multicharacter.vue'
@@ -93,14 +93,16 @@ onUnmounted(() => {
 <template>
     <div class="w-full h-full">
       <n-config-provider class="w-full h-full" :theme="darkTheme">
-        <n-dialog-provider>
-          <transition name="fade">
-            <Intro v-if="state.login" @startmulticharacter="switchState"/>
-          </transition>
-          <transition name="fade">
-            <Multicharacter v-if="state.multicharacter.state" @startlogin="switchState" :chars="state.multicharacter.characters" @close="close"/>
-          </transition>
-        </n-dialog-provider>
+        <n-message-provider>
+            <n-dialog-provider>
+            <transition name="fade">
+                <Intro v-if="state.login" @startmulticharacter="switchState"/>
+            </transition>
+            <transition name="fade">
+                <Multicharacter v-if="state.multicharacter.state" @startlogin="switchState" :chars="state.multicharacter.characters" @close="close"/>
+            </transition>
+            </n-dialog-provider>
+        </n-message-provider>
       </n-config-provider>
     </div>
 </template>
