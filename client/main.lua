@@ -42,7 +42,7 @@ local function startMulticharacter(playerData, identity)
         heading = identity.Spawn.w,
         skipFade = true
     }, function(spawn)
-        if not spawn then error('Could not spawn player') end
+        if not spawn then return p:resolve({error = true}) end
         disableDefault()
         requestCamera(p, identity.Spawn)
     end)
