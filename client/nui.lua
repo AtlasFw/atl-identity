@@ -13,7 +13,6 @@ RegisterNUICallback('update_character', function(data, cb)
             -- Needs some type of validation
             SetEntityVisible(PlayerPedId(), data.state)
             if data.appearance then
-                print(json.decode(data.appearance))
                 -- exports['atl-appearance']:setAppearance(ped, data)
             end
         end

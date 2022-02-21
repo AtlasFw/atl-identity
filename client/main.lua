@@ -16,6 +16,7 @@ local function disableDefault()
     SetPedDefaultComponentVariation(ped)
     DisablePlayerVehicleRewards(PlayerPedId())
 	DisableIdleCamera(true)
+    DisplayRadar(false)
 end
 
 local function requestCamera(p, coords)
@@ -32,19 +33,19 @@ local function requestCamera(p, coords)
 end
 
 local function startMulticharacter(playerData, identity)
-    ATL = {Active = true, Ipl = identity.ipl}
+    ATL = {Active = true, Ipl = identity.IplName}
     local p = promise.new()
     exports['spawnmanager']:spawnPlayer({
         model = 'mp_m_freemode_01',
-        x = identity.Spawn.x,
-        y = identity.Spawn.y,
-        z = identity.Spawn.z,
-        heading = identity.Spawn.w,
+        x = identity.IplCoords.x,
+        y = identity.IplCoords.y,
+        z = identity.IplCoords.z,
+        heading = identity.IplCoords.w,
         skipFade = true
     }, function(spawn)
         if not spawn then return p:resolve({error = true}) end
         disableDefault()
-        requestCamera(p, identity.Spawn)
+        requestCamera(p, identity.IplCoords)
     end)
 
     local error = Citizen.Await(p).error
