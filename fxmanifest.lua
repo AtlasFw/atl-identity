@@ -6,11 +6,11 @@ lua54 'yes'
 name 'atl-identity'
 author 'Atlas Framework Developers'
 
-ui_page 'ui/index.html'
+ui_page 'dist/index.html'
 
 files {
-    'ui/index.html',
-    'ui/**/*',
+    "dist/index.html",
+    "dist/**/*",
 }
 
 client_scripts {
