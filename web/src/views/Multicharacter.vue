@@ -230,9 +230,6 @@ const deleteCharacter = (char_id) => {
           <n-skeleton text style="width: 60%;"/>
           <n-skeleton text style="width: 80%;"/>
           <n-skeleton text style="width: 45%;"/>
-          <n-skeleton text style="width: 90%;"/>
-          <n-skeleton text />
-          <n-skeleton text style="width: 70%;"/>
         </template>
         <template v-else-if="data.id === 'create'">
           <NForm ref="formRef" :rules="rules" :model="identity" size="medium">
