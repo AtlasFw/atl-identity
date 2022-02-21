@@ -34,5 +34,14 @@ RegisterNUICallback('delete_character', function(data, cb)
             return
         end
     end
-    cb{{ done = false }}
+    cb({ done = false })
+end)
+
+RegisterNUICallback('leave_server', function(_, cb)
+    if ATL.Active.Multichar then
+        TriggerServerEvent('atl:server:leaveServer')
+        ATL.Active.Multichar = false
+        SetNuiFocus(false, false)
+    end
+    cb({})
 end)

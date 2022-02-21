@@ -9,6 +9,7 @@ defineProps({
     required: false
   }
 })
+const emit = defineEmits(['close'])
 
 const formRef = ref(null)
 const data = reactive({
@@ -123,7 +124,8 @@ const selectCharacter = () => {
       char_id: data.id,
     }).then((resp) => {
       if (resp.done) {
-
+        clearData()
+        emit('close')
       } else {
         console.log("Error: Could not select character. Data was not received");
       }
@@ -135,7 +137,8 @@ const createCharacter = () => {
     if (errors) return;
     fetchNui("create_character", {data: identity}).then((resp) => {
       if (resp.done) {
-
+        clearData()
+        emit('close')
       } else {
         console.log('Error: Could not go back to multicharacter');
       }
@@ -148,7 +151,8 @@ const deleteCharacter = () => {
       char_id: data.id,
     }).then((resp) => {
       if (resp.done) {
-
+        clearData()
+        emit('close')
       } else {
         console.log("Error: Could not select character. Data was not received");
       }

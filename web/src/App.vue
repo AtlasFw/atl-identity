@@ -7,8 +7,29 @@ import Multicharacter from './views/Multicharacter.vue'
 const state = reactive({
   login: false,
   multicharacter: {
-    state: false,
-    characters: []
+    state: true,
+    characters: [
+      {
+        char_id: '120',
+        firstname: 'Mauricio',
+        lastname: 'Gonzalez',
+        dob: '01/01/2000',
+        sex: 'female',
+        quote: 'I am a very cool person with a very cool name!'
+      },
+      {
+        char_id: 'create',
+        firstname: 'Create',
+        lastname: 'Character',
+        quote: 'Create a new identity and begin your life.'
+      },
+      {
+        char_id: 'blocked',
+        firstname: 'Blocked',
+        lastname: 'Character',
+        quote: 'Blocked character identity slot.'
+      }
+    ]
   }
 })
 const switchState = (type) => {
@@ -23,44 +44,49 @@ const switchState = (type) => {
   state[type].state = !state[type].state
 }
 
-const messageHandler = (e) => {
-    const { MaxSlots, AllowedSlots } = e.data.identity;
-    switch (e.data.action) {
-        case "startMulticharacter":
-            state.login = true;
-            for (let i = 0; i < MaxSlots; i++) {
-                if (e.data.playerData[i]) {
-                    state.multicharacter.characters.push({
-                        char_id: e.data.playerData[i].char_id,
-                        firstname: "John",
-                        lastname: "Doe",
-                        dob: "01/01/2000",
-                        sex: "Male",
-                    });
-                    continue;
-                }
-                if (i >= AllowedSlots) {
-                    state.multicharacter.characters.push({
-                        char_id: 'blocked',
-                        firstname: "Blocked",
-                        lastname: "Character",
-                        quote: "Blocked character identity slot."
-                    });
-                    continue;
-                }
+const close = () => {
+  state.multicharacter.state = false
+  state.login = false
+}
 
-                if (!e.data.playerData[i]) {
-                    state.multicharacter.characters.push({
-                        char_id: 'create',
-                        firstname: "Create",
-                        lastname: "Character",
-                        quote: "Create a new identity and begin your life."
-                    });
-                    continue;
-                }
-            }
-        break;
-    }
+const messageHandler = (e) => {
+  switch (e.data.action) {
+    case "startMulticharacter":
+      state.login = true;
+      const { MaxSlots, AllowedSlots } = e.data.identity;
+        for (let i = 0; i < MaxSlots; i++) {
+          if (e.data.playerData[i]) {
+            state.multicharacter.characters.push({
+              char_id: e.data.playerData[i].char_id,
+              firstname: "John",
+              lastname: "Doe",
+              dob: "01/01/2000",
+              sex: "Male",
+            });
+            continue;
+          }
+          if (i >= AllowedSlots) {
+            state.multicharacter.characters.push({
+              char_id: 'blocked',
+              firstname: "Blocked",
+              lastname: "Character",
+              quote: "Blocked character identity slot."
+            });
+            continue;
+          }
+
+          if (!e.data.playerData[i]) {
+            state.multicharacter.characters.push({
+              char_id: 'create',
+              firstname: "Create",
+              lastname: "Character",
+              quote: "Create a new identity and begin your life."
+            });
+            continue;
+          }
+        }
+      break;
+  }
 }
 
 onMounted(() => {
@@ -73,14 +99,14 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="bg-black w-full h-full">
+    <div class="w-full h-full">
       <n-config-provider class="bg-black w-full h-full" :theme="darkTheme">
         <n-dialog-provider>
           <transition name="fade">
             <Intro v-if="state.login" @startmulticharacter="switchState"/>
           </transition>
           <transition name="fade">
-            <Multicharacter v-if="state.multicharacter.state" @startlogin="switchState" :chars="state.multicharacter.characters"/>
+            <Multicharacter v-if="state.multicharacter.state" @startlogin="switchState" :chars="state.multicharacter.characters" @close="close"/>
           </transition>
         </n-dialog-provider>
       </n-config-provider>

@@ -1,5 +1,6 @@
 <script setup>
 import{ NButton, useDialog } from 'naive-ui'
+import { fetchNui } from '../utils/fetchNui'
 const dialog = useDialog()
 const handleLeave = () => {
   dialog.info({
@@ -8,7 +9,7 @@ const handleLeave = () => {
     positiveText: 'Leave',
     negativeText: 'Cancel',
     onPositiveClick: () => {
-      console.log('leave')
+      fetchNui('leave_server')
     }
   })
 }
