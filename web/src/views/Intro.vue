@@ -3,7 +3,7 @@ import{ NButton, useDialog } from 'naive-ui'
 import { fetchNui } from '../utils/fetchNui'
 const dialog = useDialog()
 const handleLeave = () => {
-  dialog.info({
+  dialog.error({
     title: 'Leave',
     content: 'Are you sure want to leave the server? You will have to go through queue again if you try to join back.',
     positiveText: 'Leave',

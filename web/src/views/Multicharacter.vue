@@ -107,8 +107,10 @@ const setSelected = ({currentTarget}) => {
   currentTarget.classList.add("ring-4", "ring-sky-600");
 }
 const clearData = () => {
-  data.selected.classList.remove("ring-4", "ring-sky-600", "ring-red-600");
-  data.selected = null;
+    if (data.selected) {
+      data.selected.classList.remove("ring-4", "ring-sky-600", "ring-red-600");
+      data.selected = null;
+    }
   data.id = null;
   data.char = null;
 }
@@ -128,7 +130,6 @@ const selectCharacter = () => {
 }
 const createCharacter = () => {
   formRef.value.validate((errors) => {
-      console.log(errors)
     if (errors) return;
     fetchNui("create_character", {data: identity}).then((resp) => {
       if (resp.done) {
@@ -140,16 +141,16 @@ const createCharacter = () => {
     });
   })
 }
-const deleteCharacter = () => {
-  if (data.id && data.char) {
-    fetchNui("select_character", {
-      char_id: data.id,
+const deleteCharacter = (char_id) => {
+  if (char_id) {
+    fetchNui("delete_character", {
+      char_id: char_id,
     }).then((resp) => {
       if (resp.done) {
         clearData()
         emit('close')
       } else {
-        console.log("Error: Could not select character. Data was not received");
+        console.log("Error: Could not delete character. Data was not received");
       }
     });
   }
@@ -162,7 +163,7 @@ const deleteCharacter = () => {
       <div class="mask mt-3 flex flex-col items-center justify-start scrollbar scroll-smooth scrollbar-track-slate-800 scrollbar-thumb-slate-700">
         <NCard class="w-5/6 bg-slate-800 mt-3.5 mb-3.5" size="small" :segmented="{ content: true }" v-for="(char, index) in chars" :key="index" :data-char-id="char.char_id" :data-char="JSON.stringify(char)" :title="`${char.firstname} ${char.lastname}`" @click.left="setSelected">
           <template v-if="char.char_id !== 'create' && char.char_id !== 'blocked'" #header-extra>
-            <NPopconfirm trigger="hover" @positive-click="deleteCharacter">
+            <NPopconfirm trigger="click" @positive-click="deleteCharacter(char.char_id)">
               <template #trigger>
                 <n-button size="small" tertiary circle type="error">
                   <template #icon>
@@ -238,7 +239,7 @@ const deleteCharacter = () => {
               <NSelect placeholder="Select sex" :options="identity.selectSex" v-model:value="identity.sex"/>
             </NFormItem>
             <NFormItem label="Quote" path="quote">
-              <NInput placeholder="Something interesting about you" v-model:value="identity.quote" type="textarea" maxlength="48" clearable :autosize="{ minRows: 2, maxRows: 2 }"/>
+              <NInput placeholder="Something interesting about you" v-model:value="identity.quote" maxlength="48" clearable/>
             </NFormItem>
             <NFormItem>
               <NButton class="w-full" @click.prevdient="createCharacter" :focusable="false">Create Character</NButton>
@@ -248,21 +249,19 @@ const deleteCharacter = () => {
         <template v-else>
           <div class="relative">
             <h2 class="text-lg font-medium border-b-1 text-center mb-4">Personal Information</h2>
-            <span class="ml-3">First Name: {{}}</span><br>
-            <span class="ml-3">Last Name: {{}}</span><br>
-            <span class="ml-3">Date of Birth: {{}}</span><br>
-            <span class="ml-3">Sex: {{}}</span><br>
+            <span class="ml-3">First Name: {{data.char.firstname}}</span><br>
+            <span class="ml-3">Last Name: {{data.char.lastname}}</span><br>
+            <span class="ml-3">Date of Birth: {{new Date(data.char.dob).toLocaleDateString()}}</span><br>
+            <span class="ml-3">Sex: {{data.char.sex}}</span><br>
             <h2 class="text-lg font-medium border-b-1 text-center mb-4">Job Information</h2>
             <span class="ml-3">Job: {{}}</span><br>
             <span class="ml-3">Job Grade: {{}}</span><br>
             <span class="ml-3">Job Payment: {{}}</span><br>
             <h2 class="text-lg font-medium border-b-1 text-center mb-4">Accounts Information</h2>
-            <span class="ml-3">Cash on Hand: ${{}}</span><br>
-            <span class="ml-3">Bank Account: ${{}}</span><br>
-            <span class="ml-3">Counterfeit Money: ${{}}</span><br>
-            <span class="ml-3">Special Coins: &#65284;{{}}</span><br>
-            <h2 class="text-lg font-medium border-b-1 text-center mb-4">Other Information</h2>
-            <span class="ml-3">Last Street: {{}}</span><br>
+            <span class="ml-3">Cash on Hand: ${{data.char.accounts.money}}</span><br>
+            <span class="ml-3">Bank Account: ${{data.char.accounts.bank}}</span><br>
+            <span class="ml-3">Counterfeit Money: ${{data.char.accounts.black}}</span><br>
+            <span class="ml-3">Special Coins: &#65284;{{data.char.accounts.tebex}}</span><br>
             <NButton class="w-full mt-4" @click.prevent="selectCharacter" :focusable="false">Select Character</NButton>
           </div>
         </template>

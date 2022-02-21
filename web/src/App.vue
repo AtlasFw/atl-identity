@@ -37,12 +37,23 @@ const messageHandler = (e) => {
       const { MaxSlots, AllowedSlots } = e.data.identity;
         for (let i = 0; i < MaxSlots; i++) {
           if (e.data.playerData[i]) {
+            const player = e.data.playerData[i];
+            const identity = JSON.parse(player.identity);
+            const accounts = JSON.parse(player.accounts);
+            const job = JSON.parse(player.job_data);
             state.multicharacter.characters.push({
-              char_id: e.data.playerData[i].char_id,
-              firstname: "John",
-              lastname: "Doe",
-              dob: "01/01/2000",
-              sex: "Male",
+                char_id: player.char_id,
+                firstname: identity.firstname,
+                lastname: identity.lastname,
+                quote: identity.quote,
+                dob: identity.dob,
+                sex: identity.sex,
+                accounts: {
+                    money: accounts.money,
+                    bank: accounts.bank,
+                    black: accounts.black,
+                    tebex: accounts.tebex
+                }
             });
             continue;
           }
