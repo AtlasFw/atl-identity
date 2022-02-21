@@ -1,35 +1,14 @@
 <script setup>
 import { NConfigProvider, NDialogProvider, darkTheme } from 'naive-ui'
-import { reactive } from "vue";
+import { reactive, onMounted, onUnmounted } from "vue";
 import Intro from './views/Intro.vue'
 import Multicharacter from './views/Multicharacter.vue'
 
 const state = reactive({
   login: false,
   multicharacter: {
-    state: true,
-    characters: [
-      {
-        char_id: '120',
-        firstname: 'Mauricio',
-        lastname: 'Gonzalez',
-        dob: '01/01/2000',
-        sex: 'female',
-        quote: 'I am a very cool person with a very cool name!'
-      },
-      {
-        char_id: 'create',
-        firstname: 'Create',
-        lastname: 'Character',
-        quote: 'Create a new identity and begin your life.'
-      },
-      {
-        char_id: 'blocked',
-        firstname: 'Blocked',
-        lastname: 'Character',
-        quote: 'Blocked character identity slot.'
-      }
-    ]
+    state: false,
+    characters: []
   }
 })
 const switchState = (type) => {
@@ -44,6 +23,53 @@ const switchState = (type) => {
   state[type].state = !state[type].state
 }
 
+const messageHandler = (e) => {
+    const { MaxSlots, AllowedSlots } = e.data.identity;
+    switch (e.data.action) {
+        case "startMulticharacter":
+            state.login = true;
+            for (let i = 0; i < MaxSlots; i++) {
+                if (e.data.playerData[i]) {
+                    state.multicharacter.characters.push({
+                        char_id: e.data.playerData[i].char_id,
+                        firstname: "John",
+                        lastname: "Doe",
+                        dob: "01/01/2000",
+                        sex: "Male",
+                    });
+                    continue;
+                }
+                if (i >= AllowedSlots) {
+                    state.multicharacter.characters.push({
+                        char_id: 'blocked',
+                        firstname: "Blocked",
+                        lastname: "Character",
+                        quote: "Blocked character identity slot."
+                    });
+                    continue;
+                }
+
+                if (!e.data.playerData[i]) {
+                    state.multicharacter.characters.push({
+                        char_id: 'create',
+                        firstname: "Create",
+                        lastname: "Character",
+                        quote: "Create a new identity and begin your life."
+                    });
+                    continue;
+                }
+            }
+        break;
+    }
+}
+
+onMounted(() => {
+    window.addEventListener('message', messageHandler);
+})
+
+onUnmounted(() => {
+    window.removeEventListener('message', messageHandler);
+})
 </script>
 
 <template>
