@@ -7,8 +7,16 @@ import Multicharacter from './views/Multicharacter.vue'
 const state = reactive({
   login: false,
   multicharacter: {
-    state: false,
-    characters: []
+    state: true,
+    characters: [
+        {
+              char_id: 'create',
+              firstname: "John",
+              lastname: "Doe",
+              dob: "01/01/2000",
+              sex: "Male",
+            }
+    ]
   }
 })
 const switchState = (type) => {

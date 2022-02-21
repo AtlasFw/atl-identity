@@ -50,33 +50,28 @@ const dobFeedback = computed(() => {
 
 const rules = {
   firstname: {
-    type: 'string',
     required: true,
-    message: 'Please input your first name.',
+    message: 'Please input your first name (16 chars).',
     trigger: 'blur'
   },
   lastname: {
-    type: 'string',
     required: true,
-    message: 'Please input your last name.',
+    message: 'Please input your last name (16 chars).',
     trigger: 'blur'
   },
   sex: {
-    type: 'string',
     required: true,
-    trigger: ['blur', 'change'],
+    trigger: 'blur',
     message: 'Please select your sex.'
   },
   dob: {
-    type: 'string',
+    type: 'number',
     required: true,
-    message: 'Please input your date of birth.',
-    trigger: ['blur', 'change'],
+    trigger: 'blur',
   },
   quote: {
-    type: 'string',
     required: true,
-    message: 'Please input something interesting about yourself.',
+    message: 'Please input something interesting about yourself (48 chars).',
     trigger: 'blur'
   }
 }
@@ -133,6 +128,7 @@ const selectCharacter = () => {
 }
 const createCharacter = () => {
   formRef.value.validate((errors) => {
+      console.log(errors)
     if (errors) return;
     fetchNui("create_character", {data: identity}).then((resp) => {
       if (resp.done) {
@@ -230,10 +226,10 @@ const deleteCharacter = () => {
         <template v-else-if="data.id === 'create'">
           <NForm ref="formRef" :rules="rules" :model="identity" size="medium">
             <NFormItem label="First Name" path="firstname">
-              <NInput v-model:value="identity.firstname" placeholder="Input first name" maxlength="16" show-count clearable/>
+              <NInput v-model:value="identity.firstname" placeholder="Input first name" maxlength="16" clearable/>
             </NFormItem>
             <NFormItem label="Last Name" path="lastname">
-              <NInput v-model:value="identity.lastname" placeholder="Input last name" maxlength="16" show-count clearable/>
+              <NInput v-model:value="identity.lastname" placeholder="Input last name" maxlength="16" clearable/>
             </NFormItem>
             <NFormItem label="Date of Birth" :validation-status="dobStatus" :feedback="dobFeedback" path="dob">
               <NDatePicker type="date" v-model:value="identity.dob"></NDatePicker>
@@ -242,7 +238,7 @@ const deleteCharacter = () => {
               <NSelect placeholder="Select sex" :options="identity.selectSex" v-model:value="identity.sex"/>
             </NFormItem>
             <NFormItem label="Quote" path="quote">
-              <NInput placeholder="Something interesting about you" v-model:value="identity.quote" type="textarea" maxlength="30" show-count clearable :autosize="{ minRows: 2, maxRows: 2 }"/>
+              <NInput placeholder="Something interesting about you" v-model:value="identity.quote" type="textarea" maxlength="48" clearable :autosize="{ minRows: 2, maxRows: 2 }"/>
             </NFormItem>
             <NFormItem>
               <NButton class="w-full" @click.prevdient="createCharacter" :focusable="false">Create Character</NButton>
