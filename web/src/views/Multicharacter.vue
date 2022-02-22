@@ -268,7 +268,7 @@ const deleteCharacter = (char_id) => {
             <span class="ml-3">Job Grade: {{}}</span><br>
             <span class="ml-3">Job Payment: {{}}</span><br>
             <h2 class="text-lg font-medium border-b-1 text-center mb-4">Accounts Information</h2>
-            <span class="ml-3">Cash on Hand: ${{data.char.accounts.money}}</span><br>
+            <span class="ml-3">Cash on Hand: ${{data.char.accounts.cash}}</span><br>
             <span class="ml-3">Bank Account: ${{data.char.accounts.bank}}</span><br>
             <span class="ml-3">Counterfeit Money: ${{data.char.accounts.black}}</span><br>
             <span class="ml-3">Special Coins: &#65284;{{data.char.accounts.tebex}}</span><br>
