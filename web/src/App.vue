@@ -55,7 +55,7 @@ const messageHandler = (e) => {
             dob: identity.dob,
             sex: identity.sex,
             accounts: {
-              money: accounts.money,
+              money: accounts.cash,
               bank: accounts.bank,
               black: accounts.black,
               tebex: accounts.tebex,
