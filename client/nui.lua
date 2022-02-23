@@ -11,10 +11,10 @@ RegisterNUICallback('update_character', function(data, cb)
     if ATL.Active then
         if data then
             -- Needs some type of validation
-            SetEntityVisible(PlayerPedId(), data.state)
             if data.appearance then
                 -- exports['atl-appearance']:setAppearance(ped, data)
             end
+            SetEntityVisible(PlayerPedId(), data.state)
         end
     end
     cb({})
@@ -23,7 +23,7 @@ end)
 RegisterNUICallback('select_character', function(data, cb)
     if ATL.Active then
         if data then
-            TriggerServerEvent('atl:server:loadPlayer', data)
+            TriggerServerEvent('atl:server:loadCharacter', data)
             updateCamera()
             ATL.Active = false
             SetNuiFocus(false, false)
@@ -37,7 +37,7 @@ end)
 RegisterNUICallback('create_character', function(data, cb)
     if ATL.Active then
         if data then
-            TriggerServerEvent('atl:server:registerNewPlayer', data)
+            TriggerServerEvent('atl:server:registerNewCharacter', data)
             updateCamera()
             ATL.Active = false
             SetNuiFocus(false, false)
@@ -52,7 +52,7 @@ end)
 RegisterNUICallback('delete_character', function(data, cb)
     if ATL.Active then
         if data then
-            TriggerServerEvent('atl:server:deletePlayer', data)
+            TriggerServerEvent('atl:server:deleteCharacter', data)
             updateCamera()
             ATL.Active = false
             SetNuiFocus(true, false)
