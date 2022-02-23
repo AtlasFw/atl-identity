@@ -42,6 +42,7 @@ RegisterNUICallback('create_character', function(data, cb)
             ATL.Active = false
             SetNuiFocus(false, false)
             cb({ done = true })
+            SetEntityVisible(PlayerPedId(), true)
             return
         end
     end
