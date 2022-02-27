@@ -60,6 +60,7 @@ const messageHandler = (e) => {
               black: accounts.black,
               tebex: accounts.tebex,
             },
+            job: job,
             appearance: appearance,
           });
           continue;
