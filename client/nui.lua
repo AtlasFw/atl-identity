@@ -40,7 +40,7 @@ end)
 RegisterNUICallback('create_character', function(data, cb)
     if ATL.Active then
         if data then
-            TriggerServerEvent('atl:server:registerNewCharacter', data)
+            TriggerServerEvent('atl:server:registerCharacter', data)
             updateCamera()
             ATL.Active = false
             SetNuiFocus(false, false)
@@ -68,7 +68,7 @@ end)
 
 RegisterNUICallback('leave_server', function(_, cb)
     if ATL.Active then
-        TriggerServerEvent('atl:server:leaveServer')
+        TriggerServerEvent('atl:server:playerLeave')
         ATL.Active = false
         SetNuiFocus(false, false)
     end
