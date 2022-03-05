@@ -28,6 +28,9 @@ RegisterNUICallback('select_character', function(data, cb)
             ATL.Active = false
             SetNuiFocus(false, false)
             cb({ done = true })
+            DoScreenFadeOut(0)
+            Wait(2000)
+            DoScreenFadeIn(1500)
             return
         end
     end
