@@ -132,7 +132,7 @@ const setSelected = ({ currentTarget }) => {
   if (data.selected) {
     data.selected.classList.remove('ring-4', 'ring-sky-600', 'ring-red-600');
     if (data.selected === currentTarget) {
-      fetchNui('update_character', { state: false });
+      fetchNui('update_character', { appearance: false });
       data.selected = null;
       data.id = null;
       data.char = null;
@@ -145,7 +145,7 @@ const setSelected = ({ currentTarget }) => {
     case 'create':
       data.id = 'create';
       data.char = null;
-      fetchNui('update_character', { state: false, appearance: {} });
+      fetchNui('update_character', { appearance: false });
       break;
     case 'blocked':
       data.id = null;
@@ -155,10 +155,7 @@ const setSelected = ({ currentTarget }) => {
     default:
       data.id = parseInt(currentTarget.getAttribute('data-char-id'));
       data.char = JSON.parse(currentTarget.getAttribute('data-char'));
-      fetchNui('update_character', {
-        state: true,
-        appearance: data.char.appearance,
-      });
+      fetchNui('update_character', { appearance: data.char.appearance });
       break;
   }
   currentTarget.classList.add('ring-4', 'ring-sky-600');
