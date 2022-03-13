@@ -13,22 +13,26 @@ import {
   NSelect,
   useMessage,
 } from 'naive-ui';
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive } from 'vue';
 import { fetchNui } from '../utils/fetchNui.js';
+
 defineProps({
   chars: {
     type: Array,
     required: false,
   },
 });
+
 const message = useMessage();
 const emit = defineEmits(['close']);
 const formRef = ref(null);
+
 const data = reactive({
   selected: null,
   id: null,
   char: null,
 });
+
 const identity = reactive({
   firstname: null,
   lastname: null,
@@ -45,7 +49,7 @@ const rules = {
   firstname: {
     required: true,
     trigger: 'blur',
-    asyncValidator: (rule, value) => {
+    asyncValidator: (_, value) => {
       return new Promise((resolve, reject) => {
         if (/\d/.test(value)) {
           reject('No numbers allowed');
@@ -71,7 +75,7 @@ const rules = {
   lastname: {
     required: true,
     trigger: 'blur',
-    asyncValidator: (rule, value) => {
+    asyncValidator: (_, value) => {
       return new Promise((resolve, reject) => {
         if (!value) {
           reject('Please input your last name');
@@ -126,6 +130,7 @@ const rules = {
     },
   },
 };
+
 const setSelected = ({ currentTarget }) => {
   if (currentTarget.tagName !== 'DIV') return;
 
@@ -160,6 +165,7 @@ const setSelected = ({ currentTarget }) => {
   }
   currentTarget.classList.add('ring-4', 'ring-sky-600');
 };
+
 const clearData = () => {
   if (data.selected) {
     data.selected.classList.remove('ring-4', 'ring-sky-600', 'ring-red-600');
@@ -168,6 +174,7 @@ const clearData = () => {
   data.id = null;
   data.char = null;
 };
+
 const selectCharacter = () => {
   if (data.id && data.char) {
     fetchNui('select_character', {
@@ -184,6 +191,7 @@ const selectCharacter = () => {
     });
   }
 };
+
 const createCharacter = () => {
   formRef.value
     .validate((errors) => {
@@ -206,6 +214,7 @@ const createCharacter = () => {
       return;
     });
 };
+
 const deleteCharacter = (char_id) => {
   if (char_id) {
     fetchNui('delete_character', {
