@@ -1,7 +1,7 @@
 ATL = {
   Active = false,
   Cam = nil,
-  Ipl = nil
+  Ipl = nil,
 }
 
 local function disableDefault()
@@ -11,15 +11,15 @@ local function disableDefault()
   DisablePlayerVehicleRewards(ped)
   SetMaxWantedLevel(0)
   for i = 1, 12 do
-		EnableDispatchService(i, false)
-	end
+    EnableDispatchService(i, false)
+  end
 
   -- PVP
   SetCanAttackFriendly(ped, true, false)
   NetworkSetFriendlyFireOption(true)
 
   -- Radar/HUD
-	DisableIdleCamera(true)
+  DisableIdleCamera(true)
   DisplayRadar(false)
 
   -- Set player's ped with default clothes
@@ -37,10 +37,10 @@ local function requestCamera(p, coords)
 
   -- Set invincible too would be nice
   SetEntityVisible(PlayerPedId(), false)
-  p:resolve({error = false})
+  p:resolve { error = false }
 end
 
-local function startMulticharacter(playerData, identity)
+local function startMulticharacter(playerData, identity, jobs)
   ATL.Active, ATL.Ipl = true, identity.IplName
 
   local p = promise.new()
@@ -50,9 +50,11 @@ local function startMulticharacter(playerData, identity)
     y = identity.IplCoords.y,
     z = identity.IplCoords.z,
     heading = identity.IplCoords.w,
-    skipFade = true
+    skipFade = true,
   }, function(spawn)
-    if not spawn then return p:resolve({error = true}) end
+    if not spawn then
+      return p:resolve { error = true }
+    end
     disableDefault()
     requestCamera(p, identity.IplCoords)
   end)
@@ -60,11 +62,12 @@ local function startMulticharacter(playerData, identity)
   local error = Citizen.Await(p).error
   if not error then
     SetNuiFocus(true, true)
-    SendNUIMessage({
+    SendNUIMessage {
       action = 'startMulticharacter',
       playerData = playerData,
-      identity = identity
-    })
+      identity = identity,
+      jobs = jobs,
+    }
   end
   ShutdownLoadingScreenNui()
 end

@@ -40,6 +40,7 @@ const messageHandler = (e) => {
     case 'startMulticharacter':
       state.login = true;
       const { MaxSlots, AllowedSlots } = e.data.identity;
+      const Jobs = e.data.jobs;
       for (let i = 0; i < MaxSlots; i++) {
         if (e.data.playerData[i]) {
           const player = e.data.playerData[i];
@@ -53,14 +54,19 @@ const messageHandler = (e) => {
             lastname: identity.lastname,
             quote: identity.quote,
             dob: identity.dob,
-            sex: identity.sex,
+            sex: identity.sex.charAt(0).toUpperCase() + identity.sex.slice(1).toLowerCase(),
             accounts: {
               money: accounts.cash,
               bank: accounts.bank,
               black: accounts.black,
               tebex: accounts.tebex,
             },
-            job: job,
+            job: {
+              name: Jobs[job.name].name,
+              rank: Jobs[job.name].ranks[job.rank].label,
+              paycheck: Jobs[job.name].ranks[job.rank].paycheck,
+              tax: Jobs[job.name].ranks[job.rank].taxes,
+            },
             appearance: appearance,
           });
           continue;

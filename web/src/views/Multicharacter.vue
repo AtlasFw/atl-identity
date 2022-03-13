@@ -393,9 +393,10 @@ const deleteCharacter = (char_id) => {
             <h2 class="text-lg font-medium border-b-1 text-center mb-4">
               Job Information
             </h2>
-            <span class="ml-3">Job Name: {{ data.char.job.joblabel }}</span><br />
-            <span class="ml-3">Job Grade: {{ data.char.job.ranklabel }}</span><br />
-            <span class="ml-3">Job Payment: {{ data.char.job.paycheck }}$</span><br />
+            <span class="ml-3">Job Name: {{ data.char.job.name }}</span><br />
+            <span class="ml-3">Job Grade: {{ data.char.job.rank }}</span><br />
+            <span class="ml-3">Job Paycheck: ${{ data.char.job.paycheck }}</span><br />
+            <span class="ml-3">Job Taxes: {{ data.char.job.tax }}%</span><br />
             <h2 class="text-lg font-medium border-b-1 text-center mb-4">
               Accounts Information
             </h2>
