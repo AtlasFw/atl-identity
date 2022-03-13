@@ -47,13 +47,19 @@ end)
 RegisterNUICallback('create_character', function(data, cb)
   if ATL.Active then
     if data then
-      TriggerServerEvent('atl:server:registerCharacter', data)
-      updateCamera()
+      exports['atl-appearance']:startAppearance({
+        exit = false,
+      }, function(skin)
+        if skin then
+          TriggerServerEvent('atl:server:registerCharacter', data, skin)
+          updateCamera()
 
-      -- Set player visible just in case he wasn't already
-      SetEntityVisible(PlayerPedId(), true)
-      cb { done = true }
-      return
+          -- Set player visible just in case he wasn't already
+          SetEntityVisible(PlayerPedId(), true)
+          cb { done = true }
+          return
+        end
+      end)
     end
   end
   cb { done = true }

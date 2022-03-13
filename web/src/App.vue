@@ -63,9 +63,9 @@ const messageHandler = (e) => {
             },
             job: {
               name: Jobs[job.name].name,
-              rank: Jobs[job.name].ranks[job.rank].label,
-              paycheck: Jobs[job.name].ranks[job.rank].paycheck,
-              tax: Jobs[job.name].ranks[job.rank].taxes,
+              rank: Jobs[job.name].ranks[job.rank - 1].label,
+              paycheck: Jobs[job.name].ranks[job.rank - 1].paycheck,
+              tax: Jobs[job.name].ranks[job.rank - 1].taxes,
             },
             appearance: appearance,
           });
