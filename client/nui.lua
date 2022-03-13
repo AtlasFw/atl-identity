@@ -1,12 +1,14 @@
 local function updateCamera()
-    if not ATL.Cam then return end
-    SetCamActive(ATL.Cam, false)
-    RenderScriptCams(false, false, 0, true, true)
-    RemoveIpl(ATL.Ipl)
-    SetNuiFocus(false, false)
-    ATL.Cam = nil
-    ATL.Ipl = nil
-    ATL.Active = false
+  if not ATL.Cam then
+    return
+  end
+  SetCamActive(ATL.Cam, false)
+  RenderScriptCams(false, false, 0, true, true)
+  RemoveIpl(ATL.Ipl)
+  SetNuiFocus(false, false)
+  ATL.Cam = nil
+  ATL.Ipl = nil
+  ATL.Active = false
 end
 
 RegisterNUICallback('update_character', function(data, cb)
@@ -20,7 +22,7 @@ RegisterNUICallback('update_character', function(data, cb)
       end
     end
   end
-  cb({})
+  cb {}
 end)
 
 RegisterNUICallback('select_character', function(data, cb)
@@ -28,8 +30,10 @@ RegisterNUICallback('select_character', function(data, cb)
     if data then
       TriggerServerEvent('atl:server:loadCharacter', data)
       updateCamera()
-      cb({ done = true })
+      cb { done = true }
 
+      -- Set player visible just in case he wasn't already
+      SetEntityVisible(PlayerPedId(), true)
       -- Somewhat of a smooth transition
       DoScreenFadeOut(0)
       Wait(1500)
@@ -37,7 +41,7 @@ RegisterNUICallback('select_character', function(data, cb)
       return
     end
   end
-  cb{{ done = false }}
+  cb { { done = false } }
 end)
 
 RegisterNUICallback('create_character', function(data, cb)
@@ -48,11 +52,11 @@ RegisterNUICallback('create_character', function(data, cb)
 
       -- Set player visible just in case he wasn't already
       SetEntityVisible(PlayerPedId(), true)
-      cb({ done = true })
+      cb { done = true }
       return
     end
   end
-  cb({ done = true })
+  cb { done = true }
 end)
 
 RegisterNUICallback('delete_character', function(data, cb)
@@ -61,17 +65,17 @@ RegisterNUICallback('delete_character', function(data, cb)
       TriggerServerEvent('atl:server:deleteCharacter', data)
       updateCamera()
 
-      cb({ done = true })
+      cb { done = true }
       return
     end
   end
-  cb({ done = false })
+  cb { done = false }
 end)
 
 RegisterNUICallback('leave_server', function(_, cb)
   if ATL.Active then
-    TriggerServerEvent('atl:server:playerLeave')
+    TriggerServerEvent 'atl:server:playerLeave'
     updateCamera()
   end
-  cb({})
+  cb {}
 end)

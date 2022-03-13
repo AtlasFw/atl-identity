@@ -28,15 +28,16 @@ end
 
 local function requestCamera(p, coords)
   RequestIpl(ATL.Ipl)
+  local ped = PlayerPedId()
   if not DoesCamExist(ATL.Cam) then
     ATL.Cam = CreateCamWithParams('DEFAULT_SCRIPTED_CAMERA', coords.x + 1.5, coords.y, coords.z + 1.5, 300.00, 0.00, 0.00, 60.00, false, 0)
-    PointCamAtEntity(ATL.Cam, PlayerPedId(), -0.2, 0.0, 0.2, true)
+    PointCamAtEntity(ATL.Cam, ped, -0.2, 0.0, 0.2, true)
     SetCamActive(ATL.Cam, true)
     RenderScriptCams(true, false, 0, true, true)
   end
 
   -- Set invincible too would be nice
-  SetEntityVisible(PlayerPedId(), false)
+  SetEntityVisible(ped, false)
   p:resolve { error = false }
 end
 
