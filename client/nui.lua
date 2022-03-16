@@ -15,7 +15,11 @@ RegisterNUICallback('update_character', function(data, cb)
   if ATL.Active then
     if data then
       if data.appearance and next(data.appearance) then
-        -- exports['atl-appearance']:setSkin(ped, data)
+        exports['atl-appearance']:setSkin(
+          PlayerPedId(),
+          data.appearance,
+          not exports['atl-appearance']:isFreemode(joaat(data.appearance.model))
+        )
         SetEntityVisible(PlayerPedId(), true)
       else
         SetEntityVisible(PlayerPedId(), false)
