@@ -28,7 +28,7 @@ end)
 RegisterNUICallback('select_character', function(data, cb)
   if ATL.Active then
     if data then
-      TriggerServerEvent('atl:server:loadCharacter', data)
+      TriggerServerEvent('atl-core:server:loadCharacter', data)
       updateCamera()
       cb { done = true }
 
@@ -51,7 +51,7 @@ RegisterNUICallback('create_character', function(data, cb)
         exit = false,
       }, function(skin)
         if skin then
-          TriggerServerEvent('atl:server:registerCharacter', data, skin)
+          TriggerServerEvent('atl-core:server:registerCharacter', data, skin)
           updateCamera()
 
           -- Set player visible just in case he wasn't already
@@ -68,7 +68,7 @@ end)
 RegisterNUICallback('delete_character', function(data, cb)
   if ATL.Active then
     if data then
-      TriggerServerEvent('atl:server:deleteCharacter', data)
+      TriggerServerEvent('atl-core:server:deleteCharacter', data)
       updateCamera()
 
       cb { done = true }
@@ -80,7 +80,7 @@ end)
 
 RegisterNUICallback('leave_server', function(_, cb)
   if ATL.Active then
-    TriggerServerEvent 'atl:server:playerLeave'
+    TriggerServerEvent 'atl-core:server:playerExit'
     updateCamera()
   end
   cb {}

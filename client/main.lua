@@ -73,4 +73,4 @@ local function startMulticharacter(playerData, identity, jobs)
   ShutdownLoadingScreenNui()
 end
 
-RegisterNetEvent('atl:client:startMulticharacter', startMulticharacter)
+RegisterNetEvent('atl-identity:client:startMulticharacter', startMulticharacter)
