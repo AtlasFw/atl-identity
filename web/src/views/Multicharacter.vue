@@ -3,7 +3,6 @@ import { Trash, PersonAdd } from '@vicons/ionicons5';
 import {
   NCard,
   NButton,
-  NSkeleton,
   NIcon,
   NPopconfirm,
   NForm,
@@ -15,6 +14,7 @@ import {
 } from 'naive-ui';
 import { ref, reactive } from 'vue';
 import { fetchNui } from '../utils/fetchNui.js';
+import DataHolder from '../components/DataHolder.vue';
 
 defineProps({
   chars: {
@@ -26,13 +26,11 @@ defineProps({
 const message = useMessage();
 const emit = defineEmits(['close']);
 const formRef = ref(null);
-
 const data = reactive({
   selected: null,
   id: null,
   char: null,
 });
-
 const identity = reactive({
   firstname: null,
   lastname: null,
@@ -287,154 +285,67 @@ const deleteCharacter = (char_id) => {
     </div>
     <div class="col-span-5"></div>
     <div class="relative h-full col-span-3 flex justify-center items-center">
-      <NCard
-        class="relative w-4/6 h-4/6 rounded-lg bg-slate-800 scrollbar scroll-smooth"
-        n-skeleton
-        size="medium"
-        :segmented="{ content: true, footer: 'soft' }"
-      >
-        <template #header>
-          <n-skeleton
-            v-if="!data.char && data.id !== 'create'"
-            text
-            width="55%"
-          />
-          <template v-else-if="data.id === 'create'">
-            Create a New Identity
-          </template>
-          <template v-else> Character Information </template>
-        </template>
-        <template #header-extra>
-          <n-skeleton
-            v-if="!data.char && data.id !== 'create'"
-            circle
-            width="20px"
-          />
-          <NIcon size="large" v-else-if="data.id === 'create'">
-            <PersonAdd class="h-64 w-64" />
-          </NIcon>
-          <template v-else>#{{ data.id }}</template>
-        </template>
-        <template v-if="!data.char && data.id !== 'create'">
-          <n-skeleton text />
-          <n-skeleton text style="width: 60%" />
-          <n-skeleton text style="width: 80%" />
-          <n-skeleton text style="width: 45%" />
-          <n-skeleton text style="width: 60%" />
-          <n-skeleton text />
-          <n-skeleton text style="width: 95%" />
-          <n-skeleton text style="width: 80%" />
-          <n-skeleton text style="width: 45%" />
-          <n-skeleton text style="width: 82%" />
-          <n-skeleton text />
-          <n-skeleton text style="width: 60%" />
-          <n-skeleton text style="width: 72%" />
-          <n-skeleton text style="width: 45%" />
-          <n-skeleton text style="width: 65%" />
-          <n-skeleton text />
-          <n-skeleton text style="width: 60%" />
-          <n-skeleton text style="width: 80%" />
-          <n-skeleton text style="width: 45%" />
-        </template>
-        <template v-else-if="data.id === 'create'">
-          <NForm ref="formRef" :rules="rules" :model="identity" size="medium">
-            <NFormItem label="First Name" path="firstname">
-              <NInput
-                v-model:value="identity.firstname"
-                placeholder="Input first name"
-                clearable
-              />
-            </NFormItem>
-            <NFormItem label="Last Name" path="lastname">
-              <NInput
-                v-model:value="identity.lastname"
-                placeholder="Input last name"
-                maxlength="16"
-                clearable
-              />
-            </NFormItem>
-            <NFormItem label="Date of Birth" path="dob">
-              <NDatePicker
-                type="date"
-                v-model:value="identity.dob"
-              ></NDatePicker>
-            </NFormItem>
-            <NFormItem label="Sex" path="sex">
-              <NSelect
-                placeholder="Select sex"
-                :options="identity.selectSex"
-                v-model:value="identity.sex"
-              />
-            </NFormItem>
-            <NFormItem label="Quote" path="quote">
-              <NInput
-                placeholder="Something interesting about you"
-                v-model:value="identity.quote"
-                maxlength="48"
-                clearable
-              />
-            </NFormItem>
-            <NFormItem>
-              <NButton
-                class="w-full"
-                @click.prevdient="createCharacter"
-                :focusable="false"
-                >Create Character</NButton
-              >
-            </NFormItem>
-          </NForm>
-        </template>
-        <template v-else>
-          <div class="relative">
-            <h2 class="text-lg font-medium border-b-1 text-center mb-4">
-              Personal Information
-            </h2>
-            <span class="ml-3">First Name: {{ data.char.firstname }}</span
-            ><br />
-            <span class="ml-3">Last Name: {{ data.char.lastname }}</span
-            ><br />
-            <span class="ml-3"
-              >Date of Birth:
-              {{ new Date(data.char.dob).toLocaleDateString() }}</span
-            ><br />
-            <span class="ml-3">Sex: {{ data.char.sex }}</span
-            ><br />
-            <h2 class="text-lg font-medium border-b-1 text-center mb-4">
-              Job Information
-            </h2>
-            <span class="ml-3">Job Name: {{ data.char.job.name }}</span><br />
-            <span class="ml-3">Job Grade: {{ data.char.job.rank }}</span><br />
-            <span class="ml-3">Job Paycheck: ${{ data.char.job.paycheck }}</span><br />
-            <span class="ml-3">Job Taxes: {{ data.char.job.tax }}%</span><br />
-            <h2 class="text-lg font-medium border-b-1 text-center mb-4">
-              Accounts Information
-            </h2>
-            <span class="ml-3"
-              >Cash on Hand: ${{ data.char.accounts.money }}</span
-            ><br />
-            <span class="ml-3"
-              >Bank Account: ${{ data.char.accounts.bank }}</span
-            ><br />
-            <span class="ml-3"
-              >Counterfeit Money: ${{ data.char.accounts.black }}</span
-            ><br />
-            <span class="ml-3"
-              >Special Coins: &#65284;{{ data.char.accounts.tebex }}</span
-            ><br />
-            <NButton
-              class="w-full mt-4"
-              @click.prevent="selectCharacter"
-              :focusable="false"
-              >Select Character</NButton
-            >
+      <transition name="slide-fade">
+        <div v-if="data.id === 'create'" class="w-[55%]">
+          <div class="flex items-center justify-between text-white lg:text-[15px] 2xl:text-[17px] lg:pt-3 lg:pb-3 2xl:pt-4 2xl:pb-4 bg-slate-800 rounded border-r-2 border-b-2 border-slate-700">
+            <span class="lg:ml-3 xl:ml-4">Create Identity</span>
+            <NIcon class="lg:mr-3 lg:text-[16px] 2xl:mr-4 2xl:text-xl">
+              <PersonAdd/>
+            </NIcon>
           </div>
-        </template>
-      </NCard>
+          <div class="rounded bg-slate-800 lg:mt-2 2xl:mt-3 flex flex-col items-center justify-evenly h-full border-r-2 border-b-2 border-slate-700">
+            <div class="w-5/6 lg:mt-2 2xl:mt-4">
+              <NForm ref="formRef" :rules="rules" :model="identity" size="medium">
+                <NFormItem label="First Name" path="firstname">
+                  <NInput v-model:value="identity.firstname" placeholder="Input first name" clearable/>
+                </NFormItem>
+                <NFormItem label="Last Name" path="lastname">
+                  <NInput v-model:value="identity.lastname" placeholder="Input last name" maxlength="16" clearable/>
+                </NFormItem>
+                <NFormItem label="Sex" path="sex">
+                  <NSelect placeholder="Select sex" :options="identity.selectSex" v-model:value="identity.sex"/>
+                </NFormItem>
+                <NFormItem label="Quote" path="quote">
+                  <NInput placeholder="Something interesting about you" v-model:value="identity.quote" maxlength="48" clearable/>
+                </NFormItem>
+                <NFormItem label="Date of Birth" path="dob">
+                  <NDatePicker type="date" v-model:value="identity.dob"/>
+                </NFormItem>
+                <NButton class="w-full lg:mb-2 2xl:mb-4" @click.prevdient="createCharacter" :focusable="false">Create Character</NButton>
+              </NForm>
+            </div>
+          </div>
+        </div>
+        <div v-else-if="data.char && data.id !== 'create'" class="w-[55%]">
+          <div class="flex items-center justify-between text-white lg:text-[15px] 2xl:text-[17px] lg:pt-3 lg:pb-3 2xl:pt-4 2xl:pb-4 bg-slate-800 rounded border-r-2 border-b-2 border-slate-700">
+            <span class="lg:ml-3 2xl:ml-4">Character Information</span>
+            <span class="lg:mr-3 2xl:mr-4">#15</span>
+          </div>
+          <div class="flex flex-col items-center rounded">
+            <DataHolder title="Personal Information" :sub1="{ header: 'First Name', body: data.char.firstname}" :sub2="{ header: 'Last Name', body: data.char.lastname }" :sub3="{ header: 'Date of Birth', body: new Date(data.char.dob).toLocaleDateString() }" :sub4="{ header: 'Sex', body: data.char.sex }"/>
+            <DataHolder title="Job Information" :sub1="{ header: 'Job Name', body: data.char.job.name}" :sub2="{ header: 'Job Grade', body: data.char.job.rank}" :sub3="{ header: 'Job Payment', body: data.char.job.paycheck}" :sub4="{ header: 'Job Taxes', body: data.char.job.tax}"/>
+            <DataHolder title="Accounts Information" :sub1="{ header: 'Cash on Hand', body: data.char.accounts.money}" :sub2="{ header: 'Bank Account', body: data.char.accounts.bank}" :sub3="{ header: 'Counterfeit Money', body: data.char.accounts.black}" :sub4="{ body: data.char.accounts.tebex}"/>
+            <button class="lg:text-[16px] 2xl:text-[19px] bg-slate-800 mt-2 w-full pt-2 pb-2 rounded text-white font-medium border-r-2 border-b-2 border-slate-700 transition hover:bg-blue-600 hover:scale-105" @click.prevent="selectCharacter">Select Character</button>
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <style scoped>
+.slide-fade-enter-active {
+  transition: all 0.5s ease-in-out;
+}
+.slide-fade-leave-active {
+  transition: all 0.5s cubic-bezier(.45,.86,.39,.78);
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(80px);
+  opacity: 0;
+}
+
 .mask {
   mask-image: linear-gradient(to bottom, #000000 95%, transparent 100%);
 }
