@@ -8,12 +8,12 @@ author 'Atlas Framework Developers'
 ui_page 'dist/index.html'
 
 files {
-    "dist/index.html",
-    "dist/**/*",
+  'dist/index.html',
+  'dist/**/*',
 }
 
 client_scripts {
-    'client/*.lua'
+  'client/*.lua'
 }
 
 provide 'identity'

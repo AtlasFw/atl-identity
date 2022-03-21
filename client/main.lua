@@ -38,7 +38,7 @@ local function requestCamera(p, coords)
 
   -- Set invincible too would be nice
   SetEntityVisible(ped, false)
-  p:resolve { error = false }
+  p:resolve(true)
 end
 
 local function startMulticharacter(playerData, identity, jobs)
@@ -54,14 +54,14 @@ local function startMulticharacter(playerData, identity, jobs)
     skipFade = true,
   }, function(spawn)
     if not spawn then
-      return p:resolve { error = true }
+      return p:resolve(false)
     end
     disableDefault()
     requestCamera(p, identity.IplCoords)
   end)
 
-  local error = Citizen.Await(p).error
-  if not error then
+  local success = Citizen.Await(p)
+  if success then
     SetNuiFocus(true, true)
     SendNUIMessage {
       action = 'startMulticharacter',
@@ -69,8 +69,8 @@ local function startMulticharacter(playerData, identity, jobs)
       identity = identity,
       jobs = jobs,
     }
+    ShutdownLoadingScreenNui()
   end
-  ShutdownLoadingScreenNui()
 end
 
 RegisterNetEvent('atl-identity:client:startMulticharacter', startMulticharacter)
