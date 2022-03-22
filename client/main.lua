@@ -26,10 +26,20 @@ local function disableDefault()
   SetPedDefaultComponentVariation(ped)
 end
 
-local function requestCamera(p, coords)
-  RequestIpl(ATL.Ipl)
+local requestIpl = function(ipl)
+  RequestIpl(ipl)
+  repeat
+    Wait(0)
+  until IsIplActive(ipl)
+
   local ped = PlayerPedId()
-  if not DoesCamExist(ATL.Cam) then
+  PlaceObjectOnGroundProperly(ped)
+  SetBlockingOfNonTemporaryEvents(ped, true)
+end
+
+local function requestCamera(p, coords)
+  local ped = PlayerPedId()
+  if not ATL.Cam and not DoesCamExist(ATL.Cam) then
     ATL.Cam = CreateCamWithParams('DEFAULT_SCRIPTED_CAMERA', coords.x + 1.5, coords.y, coords.z + 1.5, 300.00, 0.00, 0.00, 80.00, false, 0)
     PointCamAtEntity(ATL.Cam, ped, -0.2, 0.0, 0.2, true)
     SetCamActive(ATL.Cam, true)
@@ -56,7 +66,9 @@ local function startMulticharacter(playerData, identity, jobs)
     if not spawn then
       return p:resolve(false)
     end
+
     disableDefault()
+    requestIpl(identity.iplcoords)
     requestCamera(p, identity.IplCoords)
   end)
 
