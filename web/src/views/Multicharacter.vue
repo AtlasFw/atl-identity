@@ -102,7 +102,6 @@ const rules = {
     trigger: 'blur',
     asyncValidator: (_, value) => {
       return new Promise((resolve, reject) => {
-        console.log(value)
         if (!value || value < -2177434800000 || value > 1072933200000) {
           reject('Year must be between 1901 and 2003.');
         } else {
