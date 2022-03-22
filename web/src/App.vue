@@ -12,7 +12,7 @@ import Multicharacter from './views/Multicharacter.vue';
 const state = reactive({
   login: false,
   multicharacter: {
-    state: false,
+    state: true,
     characters: [],
   },
 });

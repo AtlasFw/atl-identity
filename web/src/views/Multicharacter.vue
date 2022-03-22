@@ -269,7 +269,7 @@ const deleteCharacter = (char_id) => {
               </NForm>
             </div>
           </div>
-          <button class="lg:text-[16px] 2xl:text-[19px] bg-slate-800 mt-2 w-full pt-2 pb-2 rounded text-white font-medium border-t-1 border-l-1 border-r-2 border-b-2 border-t-1 border-l-1 border-slate-700 transition hover:bg-blue-600 hover:scale-105" @click.prevent="createCharacter">Select Character</button>
+          <button class="lg:text-[16px] 2xl:text-[19px] bg-slate-800 mt-2 w-full pt-2 pb-2 rounded text-white font-medium border-t-1 border-l-1 border-r-2 border-b-2 border-t-1 border-l-1 border-slate-700 transition hover:bg-slate-900 hover:scale-105" @click.prevent="createCharacter">Select Character</button>
         </div>
         <div v-else-if="data.char && data.id !== 'create'" class="w-3/5">
           <div class="flex items-center justify-between text-white lg:text-[15px] 2xl:text-[17px] lg:pt-3 lg:pb-3 2xl:pt-4 2xl:pb-4 bg-slate-800 rounded border-r-2 border-b-2 border-slate-700 opacity-95">
@@ -280,7 +280,7 @@ const deleteCharacter = (char_id) => {
             <DataHolder title="Personal Information" :sub1="{ header: 'First Name', body: data.char.firstname}" :sub2="{ header: 'Last Name', body: data.char.lastname }" :sub3="{ header: 'Date of Birth', body: new Date(data.char.dob).toLocaleDateString() }" :sub4="{ header: 'Sex', body: data.char.sex }"/>
             <DataHolder title="Job Information" :sub1="{ header: 'Job Name', body: data.char.job.name}" :sub2="{ header: 'Job Grade', body: data.char.job.rank}" :sub3="{ header: 'Job Payment', body: data.char.job.paycheck}" :sub4="{ header: 'Job Taxes', body: data.char.job.tax}"/>
             <DataHolder title="Accounts Information" :sub1="{ header: 'Cash on Hand', body: data.char.accounts.money}" :sub2="{ header: 'Bank Account', body: data.char.accounts.bank}" :sub3="{ header: 'Counterfeit Money', body: data.char.accounts.black}" :sub4="{ header: 'Special Coins', body: data.char.accounts.tebex}"/>
-            <button class="lg:text-[16px] 2xl:text-[19px] bg-slate-800 mt-2 w-full pt-2 pb-2 rounded text-white font-medium border-r-2 border-b-2 border-slate-700 transition hover:bg-blue-600 hover:scale-105" @click.prevent="selectCharacter">Select Character</button>
+            <button class="lg:text-[16px] 2xl:text-[19px] bg-slate-800 mt-2 w-full pt-2 pb-2 rounded text-white font-medium border-r-2 border-b-2 border-slate-700 transition hover:bg-slate-900 hover:scale-105" @click.prevent="selectCharacter">Select Character</button>
           </div>
         </div>
       </transition>
