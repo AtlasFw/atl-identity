@@ -144,7 +144,8 @@ const setSelected = ({ currentTarget }) => {
   }
 
   data.selected = currentTarget;
-  switch (currentTarget.getAttribute('data-char-id')) {
+  const charId = currentTarget.getAttribute('data-char-id');
+  switch (charId) {
     case 'create':
       data.id = 'create';
       data.char = null;
@@ -156,7 +157,7 @@ const setSelected = ({ currentTarget }) => {
       currentTarget.classList.add('ring-4', 'ring-red-600');
       return;
     default:
-      data.id = parseInt(currentTarget.getAttribute('data-char-id'));
+      data.id = parseInt(charId);
       data.char = JSON.parse(currentTarget.getAttribute('data-char'));
       fetchNui('update_character', { appearance: data.char.appearance });
       break;
@@ -243,7 +244,7 @@ const deleteCharacter = (char_id) => {
       <transition name="slide-fade">
         <div v-if="data.id === 'create'" class="w-3/5">
           <div class="flex items-center justify-between text-white lg:text-[15px] 2xl:text-[17px] lg:pt-3 lg:pb-3 2xl:pt-4 2xl:pb-4 bg-slate-800 rounded border-r-2 border-b-2 border-slate-700 opacity-95 border-t-1 border-l-1">
-            <span class="lg:ml-3 xl:ml-4 font-medium">Create Identity</span>
+            <span class="lg:ml-3 xl:ml-4 font-semibold">Create Identity</span>
             <NIcon class="lg:mr-3 lg:text-[16px] 2xl:mr-4 2xl:text-xl">
               <PersonAdd/>
             </NIcon>
@@ -251,19 +252,19 @@ const deleteCharacter = (char_id) => {
           <div class="rounded bg-slate-800 lg:mt-2 2xl:mt-3 flex flex-col items-center justify-evenly h-full border-t-1 border-l-1 border-r-2 border-b-2 border-slate-700">
             <div class="w-[90%] lg:mt-2 2xl:mt-4">
               <NForm ref="formRef" :rules="rules" :model="identity" size="medium">
-                <NFormItem class="font-medium" label="First Name" path="firstname">
+                <NFormItem class="font-semibold" label="First Name" path="firstname">
                   <NInput v-model:value="identity.firstname" placeholder="Input first name" clearable/>
                 </NFormItem>
-                <NFormItem class="font-medium" label="Last Name" path="lastname">
+                <NFormItem class="font-semibold" label="Last Name" path="lastname">
                   <NInput v-model:value="identity.lastname" placeholder="Input last name" maxlength="16" clearable/>
                 </NFormItem>
-                <NFormItem class="font-medium" label="Sex" path="sex">
+                <NFormItem class="font-semibold" label="Sex" path="sex">
                   <NSelect placeholder="Select sex" :options="identity.selectSex" v-model:value="identity.sex"/>
                 </NFormItem>
-                <NFormItem class="font-medium" label="Quote" path="quote">
+                <NFormItem class="font-semibold" label="Quote" path="quote">
                   <NInput placeholder="Something interesting about you" v-model:value="identity.quote" maxlength="48" clearable/>
                 </NFormItem>
-                <NFormItem class="font-medium" label="Date of Birth" path="dob">
+                <NFormItem class="font-semibold" label="Date of Birth" path="dob">
                   <NDatePicker type="date" v-model:value="identity.dob"/>
                 </NFormItem>
               </NForm>
@@ -273,8 +274,8 @@ const deleteCharacter = (char_id) => {
         </div>
         <div v-else-if="data.char && data.id !== 'create'" class="w-3/5">
           <div class="flex items-center justify-between text-white lg:text-[15px] 2xl:text-[17px] lg:pt-3 lg:pb-3 2xl:pt-4 2xl:pb-4 bg-slate-800 rounded border-r-2 border-b-2 border-slate-700 opacity-95">
-            <span class="lg:ml-3 2xl:ml-4 font-medium">Character Information</span>
-            <span class="lg:mr-3 2xl:mr-4">#{{ data.id }}</span>
+            <span class="lg:ml-3 2xl:ml-4 font-semibold">Character Information</span>
+            <span class="lg:mr-3 2xl:mr-4 font-semibold">#{{ data.id }}</span>
           </div>
           <div class="flex flex-col items-center rounded">
             <DataHolder title="Personal Information" :sub1="{ header: 'First Name', body: data.char.firstname}" :sub2="{ header: 'Last Name', body: data.char.lastname }" :sub3="{ header: 'Date of Birth', body: new Date(data.char.dob).toLocaleDateString() }" :sub4="{ header: 'Sex', body: data.char.sex }"/>
