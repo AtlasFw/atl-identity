@@ -34,13 +34,14 @@ local requestIpl = function(ipl)
 
   local ped = PlayerPedId()
   PlaceObjectOnGroundProperly(ped)
+  FreezeEntityPosition(ped, true)
   SetBlockingOfNonTemporaryEvents(ped, true)
 end
 
 local function requestCamera(p, coords)
   local ped = PlayerPedId()
   if not ATL.Cam and not DoesCamExist(ATL.Cam) then
-    ATL.Cam = CreateCamWithParams('DEFAULT_SCRIPTED_CAMERA', coords.x + 1.5, coords.y, coords.z + 1.5, 300.00, 0.00, 0.00, 80.00, false, 0)
+    ATL.Cam = CreateCamWithParams('DEFAULT_SCRIPTED_CAMERA', coords.x + 1.5, coords.y, coords.z + 1.5, 180.00, 0.00, 0.00, 80.00, false, 0)
     PointCamAtEntity(ATL.Cam, ped, -0.2, 0.0, 0.2, true)
     SetCamActive(ATL.Cam, true)
     RenderScriptCams(true, false, 0, true, true)

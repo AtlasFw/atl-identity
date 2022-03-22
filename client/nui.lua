@@ -7,11 +7,13 @@ local function characterCompletion()
   Wait(1500)
 
   -- Clean up camera & IPL
+  local ped = PlayerPedId()
   DestroyCam(ATL.Cam, false)
   RenderScriptCams(false, false, 0, true, true)
   SetNuiFocus(false, false)
-  SetEntityVisible(PlayerPedId(), true)
-  SetBlockingOfNonTemporaryEvents(PlayerPedId(), false)
+  SetEntityVisible(ped, true)
+  FreezeEntityPosition(ped, false)
+  SetBlockingOfNonTemporaryEvents(ped, false)
   RemoveIpl(ATL.Ipl)
   ATL.Cam, ATL.Ipl, ATL.Active = nil, nil, false
 
