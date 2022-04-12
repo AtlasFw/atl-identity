@@ -55,11 +55,13 @@ RegisterNUICallback('create_character', function(data, cb)
 
   exports['atl-appearance']:startAppearance({
     exit = false,
-  }, function(skin)
-    if skin then
+  }, function(newSkin, skin)
+    if newSkin then
       -- Make character move to the right.
       characterCompletion()
       TriggerServerEvent('atl-core:server:registerCharacter', data, skin)
+    else
+      error('Error while creating skin')
     end
     cb({})
   end)
