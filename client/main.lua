@@ -26,7 +26,7 @@ local function disableDefault()
   SetPedDefaultComponentVariation(ped)
 end
 
-local requestIpl = function(ipl)
+local function requestIpl(ipl)
   RequestIpl(ipl)
   repeat
     Wait(0)
@@ -54,7 +54,6 @@ end
 
 local function startMulticharacter(playerData, identity, jobs)
   ATL.Active, ATL.Ipl = true, identity.IplName
-
   local p = promise.new()
   exports['spawnmanager']:spawnPlayer({
     model = 'mp_m_freemode_01',
@@ -67,13 +66,13 @@ local function startMulticharacter(playerData, identity, jobs)
     if not spawn then
       return p:resolve(false)
     end
-
     disableDefault()
-    requestIpl(identity.iplcoords)
+    requestIpl(ATL.Ipl)
     requestCamera(p, identity.IplCoords)
   end)
 
   local success = Citizen.Await(p)
+  print(success)
   if success then
     SetNuiFocus(true, true)
     SendNUIMessage {
