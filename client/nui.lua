@@ -64,7 +64,7 @@ RegisterNUICallback('create_character', function(data, cb)
       error('Error while creating skin')
     end
     cb({})
-  end)
+  end, true)
 end)
 
 RegisterNUICallback('delete_character', function(data, cb)
