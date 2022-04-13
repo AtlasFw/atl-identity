@@ -11,14 +11,13 @@ local function characterCompletion()
   DestroyCam(ATL.Cam, false)
   RenderScriptCams(false, false, 0, true, true)
   SetNuiFocus(false, false)
+  RemoveIpl(ATL.Ipl)
   SetEntityVisible(ped, true)
   FreezeEntityPosition(ped, false)
   SetBlockingOfNonTemporaryEvents(ped, false)
-  RemoveIpl(ATL.Ipl)
-  ATL.Cam, ATL.Ipl, ATL.Active = nil, nil, false
-
   DoScreenFadeIn(1500)
-  Wait(1500)
+
+  ATL.Cam, ATL.Ipl, ATL.Active = nil, nil, false
 end
 
 RegisterNUICallback('update_character', function(data, cb)
@@ -53,18 +52,19 @@ RegisterNUICallback('create_character', function(data, cb)
     return cb({})
   end
 
+  local p = promise.new()
   exports['atl-appearance']:startAppearance({
     exit = false,
   }, function(newSkin, skin)
-    if newSkin then
-      -- Make character move to the right.
-      characterCompletion()
-      TriggerServerEvent('atl-core:server:registerCharacter', data, skin)
-    else
-      error('Error while creating skin')
-    end
     cb({})
+    p:resolve({newSkin = newSkin, skin = skin})
   end, true)
+
+  local resp = Citizen.Await(p)
+  if resp.newSkin then
+    characterCompletion()
+    TriggerServerEvent('atl-core:server:registerCharacter', data, resp.skin)
+  end
 end)
 
 RegisterNUICallback('delete_character', function(data, cb)

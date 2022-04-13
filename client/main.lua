@@ -72,7 +72,6 @@ local function startMulticharacter(playerData, identity, jobs)
   end)
 
   local success = Citizen.Await(p)
-  print(success)
   if success then
     SetNuiFocus(true, true)
     SendNUIMessage {
