@@ -3,7 +3,7 @@ An Atlas resource which handles character identity and multicharacters.
 
 ## License
 ```
-atl-ui
+atl-identity
 
 Copyright (C) 2022 Atlas Framework
 
