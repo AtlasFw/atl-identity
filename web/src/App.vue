@@ -12,7 +12,7 @@ import Multicharacter from './views/Multicharacter.vue';
 const state = reactive({
   login: false,
   multicharacter: {
-    state: false,
+    state: true,
     characters: [],
   },
 });
@@ -56,16 +56,16 @@ const messageHandler = (e) => {
             dob: identity.dob,
             sex: identity.sex.charAt(0).toUpperCase() + identity.sex.slice(1).toLowerCase(),
             accounts: {
-              money: accounts.cash,
-              bank: accounts.bank,
-              black: accounts.black,
-              tebex: accounts.tebex,
+              money: `$${accounts.cash}`,
+              bank: `$${accounts.bank}`,
+              black: `$${accounts.black}`,
+              tebex: `${accounts.tebex} coins`,
             },
             job: {
               name: Jobs[job.name].name,
               rank: Jobs[job.name].ranks[job.rank - 1].label,
-              paycheck: Jobs[job.name].ranks[job.rank - 1].paycheck,
-              tax: Jobs[job.name].ranks[job.rank - 1].taxes,
+              paycheck: `$${Jobs[job.name].ranks[job.rank - 1].paycheck}`,
+              tax: `${Jobs[job.name].ranks[job.rank - 1].taxes}%`,
             },
             appearance: appearance,
           });

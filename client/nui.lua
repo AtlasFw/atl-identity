@@ -1,91 +1,86 @@
-local function updateCamera()
-  if not ATL.Cam then
+local function characterCompletion()
+  if not ATL.Cam or not ATL.Ipl then
     return
   end
-  SetCamActive(ATL.Cam, false)
+
+  DoScreenFadeOut(1500)
+  Wait(1500)
+
+  -- Clean up camera & IPL
+  local ped = PlayerPedId()
+  DestroyCam(ATL.Cam, false)
   RenderScriptCams(false, false, 0, true, true)
-  RemoveIpl(ATL.Ipl)
   SetNuiFocus(false, false)
-  ATL.Cam = nil
-  ATL.Ipl = nil
-  ATL.Active = false
+  RemoveIpl(ATL.Ipl)
+  SetEntityVisible(ped, true)
+  FreezeEntityPosition(ped, false)
+  SetBlockingOfNonTemporaryEvents(ped, false)
+  DoScreenFadeIn(1500)
+
+  ATL.Cam, ATL.Ipl, ATL.Active = nil, nil, false
 end
 
 RegisterNUICallback('update_character', function(data, cb)
-  if ATL.Active then
-    if data then
-      if data.appearance and next(data.appearance) then
-        exports['atl-appearance']:setSkin(
-          PlayerPedId(),
-          data.appearance,
-          not exports['atl-appearance']:isFreemode(joaat(data.appearance.model))
-        )
-        SetEntityVisible(PlayerPedId(), true)
-      else
-        SetEntityVisible(PlayerPedId(), false)
-      end
-    end
+  if not ATL.Active or not data then
+    return cb({})
   end
-  cb {}
+
+  local ped = PlayerPedId()
+  local appearance = data.appearance or {}
+  if next(appearance) then
+    local reload = GetEntityModel(ped) ~= joaat(appearance['model'])
+    exports['atl-appearance']:setSkin(ped, data.appearance, reload)
+    SetEntityVisible(PlayerPedId(), true) -- New ped needed
+  else
+    SetEntityVisible(ped, false)
+  end
+  cb({})
 end)
 
 RegisterNUICallback('select_character', function(data, cb)
-  if ATL.Active then
-    if data then
-      TriggerServerEvent('atl-core:server:loadCharacter', data)
-      updateCamera()
-      cb { done = true }
-
-      -- Set player visible just in case he wasn't already
-      SetEntityVisible(PlayerPedId(), true)
-      -- Somewhat of a smooth transition
-      DoScreenFadeOut(0)
-      Wait(1500)
-      DoScreenFadeIn(1500)
-      return
-    end
+  if not ATL.Active or not data then
+    return cb({})
   end
-  cb { { done = false } }
+
+  characterCompletion()
+  TriggerServerEvent('atl-core:server:loadCharacter', data)
+  cb({})
 end)
 
 RegisterNUICallback('create_character', function(data, cb)
-  if ATL.Active then
-    if data then
-      exports['atl-appearance']:startAppearance({
-        exit = false,
-      }, function(skin)
-        if skin then
-          TriggerServerEvent('atl-core:server:registerCharacter', data, skin)
-          updateCamera()
-
-          -- Set player visible just in case he wasn't already
-          SetEntityVisible(PlayerPedId(), true)
-          cb { done = true }
-          return
-        end
-      end)
-    end
+  if not ATL.Active or not data then
+    return cb({})
   end
-  cb { done = true }
+
+  local p = promise.new()
+  exports['atl-appearance']:startAppearance({
+    exit = false,
+  }, function(newSkin, skin)
+    cb({})
+    p:resolve({newSkin = newSkin, skin = skin})
+  end, true)
+
+  local resp = Citizen.Await(p)
+  if resp.newSkin then
+    characterCompletion()
+    TriggerServerEvent('atl-core:server:registerCharacter', data, resp.skin)
+  end
 end)
 
 RegisterNUICallback('delete_character', function(data, cb)
-  if ATL.Active then
-    if data then
-      TriggerServerEvent('atl-core:server:deleteCharacter', data)
-      updateCamera()
-
-      cb { done = true }
-      return
-    end
+  if not ATL.Active or not data then
+    return cb({})
   end
-  cb { done = false }
+
+  characterCompletion()
+  TriggerServerEvent('atl-core:server:deleteCharacter', data)
+  cb({})
 end)
 
 RegisterNUICallback('leave_server', function(_, cb)
   if ATL.Active then
-    TriggerServerEvent 'atl-core:server:playerExit'
-    updateCamera()
+    characterCompletion()
+    TriggerServerEvent('atl-core:server:playerExit')
   end
-  cb {}
+  cb({})
 end)

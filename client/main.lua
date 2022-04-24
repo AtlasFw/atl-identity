@@ -26,11 +26,22 @@ local function disableDefault()
   SetPedDefaultComponentVariation(ped)
 end
 
-local function requestCamera(p, coords)
-  RequestIpl(ATL.Ipl)
+local function requestIpl(ipl)
+  RequestIpl(ipl)
+  repeat
+    Wait(0)
+  until IsIplActive(ipl)
+
   local ped = PlayerPedId()
-  if not DoesCamExist(ATL.Cam) then
-    ATL.Cam = CreateCamWithParams('DEFAULT_SCRIPTED_CAMERA', coords.x + 1.5, coords.y, coords.z + 1.5, 300.00, 0.00, 0.00, 80.00, false, 0)
+  PlaceObjectOnGroundProperly(ped)
+  FreezeEntityPosition(ped, true)
+  SetBlockingOfNonTemporaryEvents(ped, true)
+end
+
+local function requestCamera(p, coords)
+  local ped = PlayerPedId()
+  if not ATL.Cam and not DoesCamExist(ATL.Cam) then
+    ATL.Cam = CreateCamWithParams('DEFAULT_SCRIPTED_CAMERA', coords.x + 1.5, coords.y, coords.z + 1.5, 180.00, 0.00, 0.00, 80.00, false, 0)
     PointCamAtEntity(ATL.Cam, ped, -0.2, 0.0, 0.2, true)
     SetCamActive(ATL.Cam, true)
     RenderScriptCams(true, false, 0, true, true)
@@ -38,12 +49,11 @@ local function requestCamera(p, coords)
 
   -- Set invincible too would be nice
   SetEntityVisible(ped, false)
-  p:resolve { error = false }
+  p:resolve(true)
 end
 
 local function startMulticharacter(playerData, identity, jobs)
   ATL.Active, ATL.Ipl = true, identity.IplName
-
   local p = promise.new()
   exports['spawnmanager']:spawnPlayer({
     model = 'mp_m_freemode_01',
@@ -54,14 +64,15 @@ local function startMulticharacter(playerData, identity, jobs)
     skipFade = true,
   }, function(spawn)
     if not spawn then
-      return p:resolve { error = true }
+      return p:resolve(false)
     end
     disableDefault()
+    requestIpl(ATL.Ipl)
     requestCamera(p, identity.IplCoords)
   end)
 
-  local error = Citizen.Await(p).error
-  if not error then
+  local success = Citizen.Await(p)
+  if success then
     SetNuiFocus(true, true)
     SendNUIMessage {
       action = 'startMulticharacter',
@@ -69,8 +80,8 @@ local function startMulticharacter(playerData, identity, jobs)
       identity = identity,
       jobs = jobs,
     }
+    ShutdownLoadingScreenNui()
   end
-  ShutdownLoadingScreenNui()
 end
 
 RegisterNetEvent('atl-identity:client:startMulticharacter', startMulticharacter)
