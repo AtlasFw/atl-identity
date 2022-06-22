@@ -6,10 +6,8 @@ use_fxv2_oal 'yes'
 name 'atl-identity'
 author 'Atlas Framework Developers'
 
-ui_page 'dist/index.html'
-
+ui_page 'http://localhost:3000/'
 files {
-  'dist/index.html',
   'dist/**/*',
 }
 

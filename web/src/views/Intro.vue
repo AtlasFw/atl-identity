@@ -1,23 +1,25 @@
 <script setup>
-import{ NButton, useDialog } from 'naive-ui'
-import { fetchNui } from '../utils/fetchNui'
-const dialog = useDialog()
-const handleLeave = () => {
-  dialog.error({
-    title: 'Leave',
-    content: 'Are you sure want to leave the server? You will have to go through queue again if you try to join back.',
-    positiveText: 'Leave',
-    negativeText: 'Cancel',
-    onPositiveClick: () => {
-      fetchNui('leave_server')
-    }
-  })
-}
+
 </script>
 
 <template>
-  <div class="h-full w-full flex items-center justify-end flex-col">
-    <NButton @click="$emit('startmulticharacter', 'multicharacter')" class="w-64 h-14 text-lg" :focusable="false" ghost strong type="info">Get Started</NButton>
-    <NButton @click="handleLeave" class="mb-5 mt-2.5 hover:underline" text ghost strong type="error">Leave</NButton>
-  </div>
+	<div class="absolute left-1/2 -translate-x-1/2 bottom-0 flex flex-col justify-center items-center mb-2">
+		<button @click="$emit('switch')" class="bg-transparent blue border-2 border-sky-400 shadow font-medium shadow-sky-400 text-xl px-16 py-2.5 rounded-sm transition duration-200">Get Started</button>
+		<button class="font-semibold text-red-400 mt-1 red hover:text-red-500 hover:underline transition duration-200">Disconnect</button>
+	</div>
 </template>
+
+<style>
+.blue {
+	text-shadow: 0 2px 6px rgba(47, 129, 229, 0.9);
+	color: rgba(118, 216, 246, 0.7);
+}
+
+.blue:hover {
+	background-color: #58C2FC19;
+}
+
+.red {
+	text-shadow: 0 1px 6px rgba(225, 60, 60, 0.5);
+}
+</style>

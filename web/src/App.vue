@@ -1,147 +1,48 @@
 <script setup>
-import {
-  NConfigProvider,
-  NDialogProvider,
-  NMessageProvider,
-  darkTheme,
-} from 'naive-ui';
-import { reactive, onMounted, onUnmounted } from 'vue';
-import Intro from './views/Intro.vue';
-import Multicharacter from './views/Multicharacter.vue';
+import Intro from './views/Intro.vue'
+import Multicharacter from './views/Multicharacter.vue'
+import { NMessageProvider, NDialogProvider, NGlobalStyle } from "naive-ui";
+import { onMounted, onUnmounted, ref, reactive } from "vue";
 
 const state = reactive({
-  login: false,
-  multicharacter: {
-    state: true,
-    characters: [],
-  },
-});
+	login: false,
+	multicharacter: true,
+})
 
-const switchState = (type) => {
-  if (type === 'login') {
-    state.login = true;
-    state.multicharacter.state = false;
-    return;
-  }
-  if (state.login) {
-    state.login = false;
-  }
-  state[type].state = !state[type].state;
-};
-
-const close = () => {
-  state.multicharacter.state = false;
-  state.multicharacter.characters = [];
-  state.login = false;
-};
-
-const messageHandler = (e) => {
-  switch (e.data.action) {
-    case 'startMulticharacter':
-      state.login = true;
-      const { MaxSlots, AllowedSlots } = e.data.identity;
-      const Jobs = e.data.jobs;
-      for (let i = 0; i < MaxSlots; i++) {
-        if (e.data.playerData[i]) {
-          const player = e.data.playerData[i];
-          const identity = JSON.parse(player.identity);
-          const accounts = JSON.parse(player.accounts);
-          const job = JSON.parse(player.job_data);
-          const appearance = JSON.parse(player.appearance);
-          state.multicharacter.characters.push({
-            char_id: player.char_id,
-            firstname: identity.firstname,
-            lastname: identity.lastname,
-            quote: identity.quote,
-            dob: identity.dob,
-            sex: identity.sex.charAt(0).toUpperCase() + identity.sex.slice(1).toLowerCase(),
-            accounts: {
-              money: `$${accounts.cash}`,
-              bank: `$${accounts.bank}`,
-              black: `$${accounts.black}`,
-              tebex: `${accounts.tebex} coins`,
-            },
-            job: {
-              name: Jobs[job.name].name,
-              rank: Jobs[job.name].ranks[job.rank - 1].label,
-              paycheck: `$${Jobs[job.name].ranks[job.rank - 1].paycheck}`,
-              tax: `${Jobs[job.name].ranks[job.rank - 1].taxes}%`,
-            },
-            appearance: appearance,
-          });
-          continue;
-        }
-        if (i >= AllowedSlots) {
-          state.multicharacter.characters.push({
-            char_id: 'blocked',
-            firstname: 'Blocked',
-            lastname: 'Character',
-            quote: 'Blocked character identity slot.',
-          });
-          continue;
-        }
-
-        if (!e.data.playerData[i]) {
-          state.multicharacter.characters.push({
-            char_id: 'create',
-            firstname: 'Create',
-            lastname: 'Character',
-            quote: 'Create a new identity and begin your life.',
-          });
-          continue;
-        }
-      }
-      break;
-  }
-};
-
-onMounted(() => {
-  window.addEventListener('message', messageHandler);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('message', messageHandler);
-});
+const switchState = (page) => {
+	page === 'login' ? state.login = true : state.login = false;
+	page === 'multicharacter' ? state.multicharacter = true : state.multicharacter = false;
+}
 </script>
 
 <template>
-  <div class="w-full h-full">
-    <n-config-provider class="w-full h-full" :theme="darkTheme">
-      <n-message-provider>
-        <n-dialog-provider>
-          <transition name="fade">
-            <Intro v-if="state.login" @startmulticharacter="switchState" />
-          </transition>
-          <transition name="fade">
-            <Multicharacter
-              v-if="state.multicharacter.state"
-              @startlogin="switchState"
-              :chars="state.multicharacter.characters"
-              @close="close"
-            />
-          </transition>
-        </n-dialog-provider>
-      </n-message-provider>
-    </n-config-provider>
-  </div>
+	<NMessageProvider>
+			<NDialogProvider>
+				<transition name="fade">
+					<Intro v-if="state.login" @switch="switchState('multicharacter')"/>
+				</transition>
+				<transition name="fade">
+					<Multicharacter v-if="state.multicharacter" @switch="switchState('login')"/>
+				</transition>
+			</NDialogProvider>
+	</NMessageProvider>
+	<NGlobalStyle/>
 </template>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800;900&display=swap');
+
 body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-size: 20px;
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+	background: transparent !important;
 }
 
 #app {
-  height: 100%;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	height: 100vh;
+	margin: 0 auto;
 }
-
 .fade-enter-active {
   transition: all 0.15s ease-out;
 }
