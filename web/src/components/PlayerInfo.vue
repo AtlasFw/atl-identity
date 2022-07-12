@@ -1,12 +1,12 @@
 <script setup>
-import { PersonAdd } from '@vicons/ionicons5'
+import { Person } from '@vicons/ionicons5'
 </script>
 
 <template>
 	<div class="w-[24em] flex flex-col items-center mr-8">
 		<div class="w-full flex justify-between items-center mt-2 py-3 px-3 -skew-x-2 rounded shadow shadow-slate-900 border-b-1 border-b-slate-500 bg-[#1E293BE8]">
 			<span class="text-lg font-semibold text-white">Character Information</span>
-			<span class="text-white font-light text-lg">#120</span>
+			<Person class="w-5 h-5"/>
 		</div>
 		<div class="w-full flex flex-col items-center mt-2 mb-2 rounded shadow shadow-slate-900 border-b-1 border-b-slate-500 bg-[#1E293BE8]">
 			<div class="flex justify-between w-5/6 mt-2 mb-2">

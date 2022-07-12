@@ -2,7 +2,7 @@
 import PlayerCard from '../components/PlayerCard.vue'
 import PlayerInfo from '../components/PlayerInfo.vue'
 import PlayerCreation from '../components/PlayerCreation.vue'
-import PlayerEmpty from '../components/PlayerEmpty.vue'
+import PlayerBanned from '../components/PlayerBanned.vue'
 defineProps({
 	characters: {
 		type: Array,
@@ -46,7 +46,7 @@ defineProps({
 		</div>
 		<PlayerInfo/>
 		<PlayerCreation/>
-    <PlayerEmpty/>
+    <PlayerBanned/>
 	</div>
 </template>
 
