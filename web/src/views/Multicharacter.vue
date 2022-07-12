@@ -1,7 +1,7 @@
 <script setup>
 import PlayerCard from '../components/PlayerCard.vue'
 import PlayerInfo from '../components/PlayerInfo.vue'
-import PlayerEmpty from '../components/PlayerEmpty.vue'
+import PlayerCreation from '../components/PlayerCreation.vue'
 defineProps({
 	characters: {
 		type: Array,
@@ -44,7 +44,7 @@ defineProps({
 			<button type="button" @click="$emit('switch')" class="font-semibold text-red-400 mt-2 red hover:text-red-500 hover:underline transition mb-2 duration-200">Go Back</button>
 		</div>
 		<PlayerInfo/>
-		<PlayerEmpty/>
+		<PlayerCreation/>
 	</div>
 </template>
 

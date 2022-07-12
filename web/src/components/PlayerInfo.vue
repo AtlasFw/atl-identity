@@ -42,6 +42,6 @@ import { PersonAdd } from '@vicons/ionicons5'
 				<span class="font-light">Mauricio Rivera</span>
 			</div>
 		</div>
-		<button class="h-12 w-full rounded bg-[#1E293BE8] blue border-2 border-sky-400 shadow font-medium shadow-sky-400 text-xl transition duration-200">Create Character</button>
+		<button class="h-12 w-full rounded bg-[#1E293BE8] shadow font-bold text-xl transition duration-200 shadow shadow-slate-900 border-b-1 border-b-slate-500 hover:bg-slate-600">Select Character</button>
 	</div>
 </template>

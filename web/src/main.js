@@ -9,6 +9,23 @@ const themeOverrides = {
 		"fontWeight": "500",
 		"fontWeightStrong": "700",
 		"backgroundColor": "transparent",
+		"boxShadowFocus": `0 0 8px 0 rgba(85, 162, 230, 0.3)`
+	},
+	Select: {
+		peers: {
+			InternalSelection: {
+				borderHover: `1px solid #178AD1`,
+				borderActive: `1px solid #178AD1`,
+				borderFocus: `1px solid #178AD1`,
+				"boxShadowFocus": `0 0 8px 0 rgba(85, 162, 230, 0.3)`
+			}
+		}
+	},
+	Input: {
+		"caretColor": "#55A2E6FF",
+		"borderHover": `1px solid #178AD1`,
+		"borderFocus": `1px solid #178AD1`,
+		"boxShadowFocus": `0 0 8px 0 rgba(85, 162, 230, 0.3)`
 	},
 	Message: {
 		"colorError": "rgba(125, 76, 76, 1)",
